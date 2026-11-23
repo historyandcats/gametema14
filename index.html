@@ -1,0 +1,1097 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Игра «Декабристский жребий»: выбери судьбу и пройди 10 испытаний по теме «Движение декабристов».">
+<title>Декабристский жребий</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Golos+Text:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1f3c8f;--navy2:#162c6b;--orange:#f0861f;--orange2:#d9700c;--purple:#7a4fc4;
+  --ink:#172033;--muted:#5b6478;--paper:#f6f7fb;--card:#fff;--line:#e2e7f3;
+  --soft:#eef2fb;--softo:#fdeedf;--softp:#f1ebfb;--ok:#1f8a5b;--softok:#e3f4ec;
+  --dfont:"Unbounded","Inter",system-ui,sans-serif;--bfont:"Golos Text","Inter",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.5 var(--bfont);
+  padding:0 max(16px,env(safe-area-inset-right)) 40px max(16px,env(safe-area-inset-left));overflow-x:hidden}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--purple);outline-offset:3px}
+.wrap{max-width:1080px;margin:0 auto}
+.hide{display:none!important}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;overflow:hidden;border-radius:0 0 32px 32px;margin:0 calc(-1*max(16px,env(safe-area-inset-left)));
+  background:var(--orange);color:#fff;padding:34px max(16px,env(safe-area-inset-left)) 0}
+.hero::before{content:"";position:absolute;inset:-60%;background:repeating-conic-gradient(from 0deg at 50% 62%,rgba(255,255,255,.13) 0 6deg,transparent 6deg 15deg);pointer-events:none}
+.hero-in{position:relative;max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1.3fr .9fr;gap:24px;align-items:end}
+.brand{display:inline-flex;align-items:center;gap:10px;background:#fff;color:var(--navy);border-radius:999px;padding:6px 16px 6px 8px;font:800 14px var(--bfont);letter-spacing:.02em}
+.brand svg{width:30px;height:30px}
+.hero h1{font:800 clamp(34px,6.2vw,68px)/1.02 var(--dfont);margin:18px 0 0;letter-spacing:-.01em;text-shadow:0 3px 0 rgba(0,0,0,.08)}
+.band{display:inline-block;background:var(--purple);color:#fff;font:600 clamp(14px,1.9vw,19px)/1.3 var(--dfont);padding:10px 18px;border-radius:14px;margin:16px 0 0;transform:rotate(-1.2deg);box-shadow:0 5px 0 rgba(0,0,0,.12)}
+.hero p.lead{font:500 18px/1.45 var(--bfont);max-width:560px;margin:18px 0 26px}
+.zig{position:absolute;pointer-events:none}
+.hero-cat{position:relative;align-self:end;justify-self:center;width:min(350px,100%);filter:drop-shadow(0 10px 18px rgba(27,35,64,.18))}
+.hero-cat svg{display:block;width:100%;height:auto}
+.rules{position:relative;max-width:1080px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--navy);border-radius:22px 22px 0 0;overflow:hidden}
+.rule{padding:16px 18px;display:flex;gap:12px;align-items:center;border-right:1px solid rgba(255,255,255,.14)}
+.rule:last-child{border-right:0}
+.rule b{font:800 26px/1 var(--dfont);color:var(--orange)}
+.rule span{font:500 15px/1.3 var(--bfont);color:#e1e7f8}
+
+/* ---------- SECTION HEAD ---------- */
+.sec-h{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin:34px 0 16px}
+.sec-h h2{font:800 clamp(22px,3vw,30px)/1.15 var(--dfont);color:var(--navy);margin:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:16px;padding:14px 22px;font:700 16px var(--bfont);transition:transform .12s,box-shadow .12s,background .15s}
+.btn:active{transform:translateY(2px)}
+.btn-o{background:var(--orange);color:#fff;box-shadow:0 5px 0 var(--orange2)}
+.btn-o:hover{background:#f39432}
+.btn-n{background:var(--navy);color:#fff;box-shadow:0 5px 0 var(--navy2)}
+.btn-g{background:#fff;color:var(--navy);border:2px solid var(--line)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none;transform:none}
+
+/* ---------- FATES ---------- */
+.fates{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.fate{position:relative;text-align:left;background:var(--card);border:3px solid var(--line);border-radius:24px;padding:18px 18px 20px;display:flex;flex-direction:column;gap:10px;transition:transform .16s,border-color .16s,box-shadow .16s;min-height:300px}
+.fate:hover{transform:translateY(-4px);border-color:var(--k);box-shadow:0 10px 0 color-mix(in srgb,var(--k) 18%,transparent)}
+.fate .emb{width:76px;height:76px;border-radius:22px;background:var(--kb);display:grid;place-items:center}
+.fate .emb svg{width:50px;height:50px}
+.fate .who{font:800 20px/1.15 var(--dfont);color:var(--k)}
+.fate .nm{font:600 14px var(--bfont);color:var(--muted)}
+.fate .txt{font:400 15px/1.45 var(--bfont);flex:1}
+.fate .meta{display:flex;justify-content:space-between;align-items:center;font:700 13px var(--bfont);color:var(--muted)}
+.fate .best{background:var(--kb);color:var(--k);border-radius:999px;padding:4px 10px}
+.fate.drawn{animation:pick .7s ease}
+.fate.flick{border-color:var(--k);transform:translateY(-6px) rotate(-1deg)}
+@keyframes pick{0%{transform:scale(1)}40%{transform:scale(1.05) rotate(-1.5deg)}100%{transform:scale(1)}}
+
+.howto{margin-top:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.how{background:#fff;border:2px dashed #d7c7a8;border-radius:20px;padding:16px 18px;font:400 15px/1.45 var(--bfont)}
+.how h3{margin:0 0 6px;font:800 16px var(--dfont);color:var(--navy)}
+.how .ic{font:800 13px var(--bfont);color:#fff;background:var(--purple);border-radius:8px;padding:2px 8px;margin-right:6px}
+
+/* ---------- GAME ---------- */
+.topbar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(8px);margin:0 calc(-1*max(16px,env(safe-area-inset-left)));padding:12px max(16px,env(safe-area-inset-left));border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.topbar .who{display:flex;align-items:center;gap:10px;min-width:0}
+.topbar .who .emb{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--kb);flex:none}
+.topbar .who .emb svg{width:28px}
+.topbar .who b{font:800 15px/1.1 var(--dfont);color:var(--k);display:block}
+.topbar .who small{font:600 13px var(--bfont);color:var(--muted)}
+.score{margin-left:auto;display:flex;gap:14px;align-items:center;min-width:0}
+.pips{display:flex;gap:4px;align-items:center}
+.fails{display:flex;align-items:center;gap:3px;background:#fff;border:2px solid var(--line);border-radius:999px;padding:4px 10px 4px 8px}
+.fails i{width:12px;height:12px;border-radius:3px;border:2px solid #c9b8ea;transform:rotate(45deg);margin:0 2px}
+.fails i.on{background:var(--purple);border-color:var(--purple)}
+.fails b{font:800 13px var(--bfont);color:var(--purple);margin-left:4px}
+.fails.warn{border-color:var(--purple);animation:pulse 1.6s ease infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 5px rgba(122,79,196,.18)}}
+.pip{width:11px;height:11px;border-radius:50%;background:var(--line)}
+.pip.ok{background:var(--orange)}
+.pip.no{background:var(--purple)}
+.pip.cur{box-shadow:0 0 0 3px #fff,0 0 0 5px var(--navy)}
+.exit{font:700 14px var(--bfont);color:var(--navy);padding:8px 12px;border-radius:10px}
+.exit:hover{background:var(--soft)}
+
+.game{display:grid;grid-template-columns:210px 1fr;gap:26px;margin-top:24px;align-items:start}
+.path{position:sticky;top:84px;list-style:none;margin:0;padding:0 4px 0 0;max-height:calc(100vh - 100px);overflow-y:auto}
+.path li{position:relative;padding:0 0 8px 42px;min-height:42px}
+.path li::before{content:"";position:absolute;left:14px;top:30px;bottom:0;width:4px;border-radius:2px;background:var(--line)}
+.path li:last-child::before{display:none}
+.path .dot{position:absolute;left:0;top:0;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:800 12px var(--dfont);background:#fff;border:3px solid var(--line);color:var(--muted)}
+.path .y{font:800 12px/1.2 var(--bfont);color:var(--muted);display:block}
+.path .t{font:600 13px/1.2 var(--bfont)}
+.path li.cur .dot{border-color:var(--navy);color:var(--navy);box-shadow:0 0 0 5px var(--soft)}
+.path li.ok .dot{background:var(--orange);border-color:var(--orange);color:#fff}
+.path li.no .dot{background:var(--purple);border-color:var(--purple);color:#fff}
+.path li.ok::before{background:var(--orange)}
+.path li.no::before{background:var(--purple)}
+.path li.fut .t{color:var(--muted)}
+
+.card{background:#fff;border-radius:28px;border:3px solid var(--line);overflow:hidden;box-shadow:0 10px 30px rgba(31,60,143,.07)}
+.card-h{position:relative;background:var(--navy);color:#fff;padding:22px 26px 24px;overflow:hidden}
+.card-h::after{content:"";position:absolute;right:-60px;top:-80px;width:260px;height:260px;border-radius:50%;background:repeating-conic-gradient(rgba(255,255,255,.07) 0 8deg,transparent 8deg 20deg)}
+.eyebrow{display:inline-block;background:var(--orange);color:#fff;font:800 14px var(--bfont);border-radius:999px;padding:4px 12px;letter-spacing:.02em}
+.card-h h2{position:relative;z-index:1;font:800 clamp(21px,2.8vw,28px)/1.2 var(--dfont);margin:12px 0 0}
+.card-b{padding:22px 26px 26px}
+.story{font:400 17px/1.55 var(--bfont);margin:0 0 16px}
+.ref{position:relative;background:var(--softo);border:2px dashed #e9b37a;border-radius:20px;padding:16px 18px 16px 18px;margin:0 0 16px}
+.ref h4{margin:0 0 6px;font:800 13px var(--bfont);letter-spacing:.08em;text-transform:uppercase;color:var(--orange2)}
+.ref p{margin:0;font:400 16px/1.5 var(--bfont)}
+.script{display:inline-flex;align-items:center;gap:8px;background:var(--softp);color:var(--purple);font:700 14px var(--bfont);border-radius:999px;padding:7px 14px 7px 8px;margin:0 0 18px}
+.script i{font-style:normal;width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:grid;place-items:center;font-size:13px}
+.qhead{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin:4px 0 12px}
+.qtype{font:800 12px var(--bfont);text-transform:uppercase;letter-spacing:.08em;color:var(--navy);background:var(--soft);border-radius:8px;padding:5px 10px}
+.tries{display:flex;align-items:center;gap:6px;font:600 14px var(--bfont);color:var(--muted);margin-left:auto}
+.heart{width:20px;height:20px}
+.heart.used path{fill:var(--line)}
+.q{font:700 19px/1.4 var(--bfont);margin:0 0 14px}
+
+.opts{display:grid;gap:10px}
+.opt{text-align:left;display:flex;gap:12px;align-items:flex-start;background:#fff;border:2.5px solid var(--line);border-radius:16px;padding:13px 16px;font:500 16px/1.4 var(--bfont);transition:border-color .12s,background .12s}
+.opt:hover{border-color:#b9c5e6}
+.opt .mk{flex:none;width:24px;height:24px;border-radius:50%;border:2.5px solid #b9c5e6;margin-top:1px;display:grid;place-items:center}
+.opt.multi .mk{border-radius:7px}
+.opt.sel{border-color:var(--navy);background:var(--soft)}
+.opt.sel .mk{background:var(--navy);border-color:var(--navy)}
+.opt.sel .mk::after{content:"";width:10px;height:6px;border:solid #fff;border-width:0 0 3px 3px;transform:rotate(-45deg) translate(1px,-1px)}
+.opt.right{border-color:var(--ok);background:var(--softok)}
+.opt.right .mk{background:var(--ok);border-color:var(--ok)}
+.opt.wrong{border-color:var(--purple);background:var(--softp)}
+.opt.wrong .mk{background:var(--purple);border-color:var(--purple)}
+.locked .opt,.locked .chip,.locked .mrow button{pointer-events:none}
+
+/* order */
+.slots{display:grid;gap:8px;margin-bottom:14px}
+.slot{display:flex;align-items:center;gap:12px;min-height:54px;border:2.5px dashed #c9d2ea;border-radius:16px;padding:8px 12px;font:500 16px/1.35 var(--bfont);background:#fbfcff}
+.slot .n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--soft);color:var(--navy);display:grid;place-items:center;font:800 14px var(--dfont)}
+.slot.fill{border-style:solid;border-color:var(--navy);background:#fff;cursor:pointer}
+.slot.fill .n{background:var(--navy);color:#fff}
+.slot.right{border-color:var(--ok);background:var(--softok)}.slot.right .n{background:var(--ok)}
+.slot.wrong{border-color:var(--purple);background:var(--softp)}.slot.wrong .n{background:var(--purple)}
+.pool{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:#fff;border:2.5px solid var(--orange);border-radius:999px;padding:9px 16px;font:600 15px/1.3 var(--bfont);text-align:left}
+.chip:hover{background:var(--softo)}
+.hint-s{font:500 14px var(--bfont);color:var(--muted);margin:0 0 10px}
+
+/* match */
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px}
+.mcol{display:grid;gap:10px;align-content:start}
+.mcol h5{margin:0;font:800 12px var(--bfont);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.mi{position:relative;text-align:left;border:2.5px solid var(--line);border-radius:16px;padding:12px 14px 12px 50px;font:500 15px/1.35 var(--bfont);background:#fff;min-height:54px}
+.mi .b{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;border:2.5px dashed #c9d2ea;display:grid;place-items:center;font:800 13px var(--dfont);color:#fff}
+.mi.act{border-color:var(--orange);box-shadow:0 0 0 4px var(--softo)}
+.mi.paired .b{border:0}
+.mi.right{border-color:var(--ok);background:var(--softok)}
+.mi.wrong{border-color:var(--purple);background:var(--softp)}
+.mi.lft{font-weight:700}
+
+.actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:18px}
+.fb{margin-top:18px;border-radius:20px;padding:16px 18px 16px 18px;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;animation:rise .35s ease}
+.fb .ic{grid-row:span 3;width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font:800 24px var(--dfont);color:#fff}
+.fb h4{margin:0;font:800 18px var(--dfont)}
+.fb p{margin:0;font:400 15.5px/1.5 var(--bfont)}
+.fb .cons{font-weight:600;margin-top:6px}
+.fb.hint{background:var(--soft);border:2px solid #cdd7f0}.fb.hint .ic{background:var(--navy)}.fb.hint h4{color:var(--navy)}
+.fb.ok{background:var(--softo);border:2px solid #f3c38f}.fb.ok .ic{background:var(--orange)}.fb.ok h4{color:var(--orange2)}
+.fb.no{background:var(--softp);border:2px solid #d3c2f0}.fb.no .ic{background:var(--purple)}.fb.no h4{color:var(--purple)}
+.shake{animation:shake .4s ease}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---------- END ---------- */
+.diploma{position:relative;max-width:820px;margin:100px auto 0;background:#fffdf8;border-radius:30px;padding:40px 40px 34px;border:3px solid #ecd9b8;box-shadow:0 0 0 10px #fff,0 0 0 13px var(--navy),0 20px 50px rgba(31,60,143,.15);text-align:center}
+.diploma .eyebrow{background:var(--navy)}
+.diploma h2{font:800 clamp(26px,4.4vw,44px)/1.1 var(--dfont);color:var(--navy);margin:16px 0 6px}
+.diploma .sub{font:600 16px var(--bfont);color:var(--muted)}
+.big-score{display:inline-flex;align-items:baseline;gap:6px;margin:22px 0 6px;font:800 64px/1 var(--dfont);color:var(--orange)}
+.big-score small{font:800 26px var(--dfont);color:var(--muted)}
+.diploma .end-t{font:400 17px/1.6 var(--bfont);max-width:620px;margin:10px auto 0;text-align:left}
+.diploma.arrest{background:#f7f3fd;border-color:#d3c2f0;box-shadow:0 0 0 10px #fff,0 0 0 13px var(--purple),0 20px 50px rgba(122,79,196,.18)}
+.diploma.arrest{margin-top:40px}
+.diploma.arrest h2{color:var(--purple)}
+.end-actions .sub-link{white-space:normal;text-align:center}
+.diploma.arrest .big-score{color:var(--purple)}
+.peek{position:absolute;left:34px;top:-86px;width:110px}.peek svg{display:block;width:100%;height:auto}
+.seal{position:absolute;right:-14px;top:-22px;width:110px;height:110px;transform:rotate(12deg)}
+.recap{list-style:none;padding:0;margin:26px 0 0;text-align:left;display:grid;gap:8px}
+.recap li{display:flex;gap:12px;align-items:flex-start;padding:10px 14px;border-radius:14px;background:var(--paper);font:500 15px/1.4 var(--bfont)}
+.recap .r{flex:none;font:800 12px var(--bfont);border-radius:8px;padding:4px 8px;color:#fff;margin-top:1px}
+.recap .r.ok{background:var(--orange)}.recap .r.no{background:var(--purple)}
+.recap small{display:block;color:var(--muted);font-weight:500}
+.end-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:26px}
+
+.subscribe{max-width:1080px;margin:40px auto 0}
+.sub-in{position:relative;overflow:hidden;display:flex;align-items:center;gap:20px;background:var(--navy);color:#fff;border-radius:26px;padding:20px 24px}
+.sub-in::before{content:"";position:absolute;right:-80px;top:-120px;width:300px;height:300px;border-radius:50%;background:repeating-conic-gradient(rgba(240,134,31,.22) 0 8deg,transparent 8deg 20deg)}
+.sub-cat{flex:none;width:72px;height:72px;position:relative}.sub-cat svg{width:100%;height:100%}
+.sub-txt{position:relative;flex:1;display:grid;gap:2px}
+.sub-txt b{font:800 19px/1.2 var(--dfont)}
+.sub-txt span{font:500 15px/1.4 var(--bfont);color:#dfe6f7}
+.sub-link{position:relative;text-decoration:none;white-space:nowrap}
+@media (max-width:640px){.sub-in{flex-wrap:wrap}.sub-link{width:100%}}
+footer{max-width:1080px;margin:40px auto 0;display:flex;align-items:center;gap:12px;color:var(--muted);font:500 14px var(--bfont)}
+footer svg{width:34px;height:34px;flex:none}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:960px){
+  .fates{grid-template-columns:repeat(2,1fr)}
+  .game{grid-template-columns:1fr}
+  .path{position:static;display:flex;gap:0;overflow-x:auto;padding:4px 2px 6px;max-height:none}
+  .path li{flex:0 0 58px;padding:40px 2px 0;min-height:0;text-align:center}
+  .path .y{font-size:11px}
+  .path li::before{left:50%;right:-50%;top:14px;bottom:auto;width:auto;height:4px}
+  .path .dot{left:50%;transform:translateX(-50%)}
+  .path .t{display:none}
+}
+@media (max-width:720px){
+  .hero-in{grid-template-columns:1fr}
+  .hero-cat{width:200px;justify-self:end;margin-top:-30px}
+  .rules{grid-template-columns:1fr 1fr}
+  .rule:nth-child(2n){border-right:0}
+  .rule{border-right:0;border-bottom:1px solid rgba(255,255,255,.14);padding:12px 16px}
+  .howto{grid-template-columns:1fr}
+  .card-h,.card-b{padding-left:18px;padding-right:18px}
+  .match{grid-template-columns:1fr}
+  .diploma{padding:34px 20px 26px}
+  .seal{width:80px;height:80px;right:-6px}
+  .peek{width:84px;left:18px;top:-66px}
+  .topbar .who small{display:none}
+  .pip{width:8px;height:8px}.pips{gap:3px}
+}
+@media (max-width:460px){
+  .fates{grid-template-columns:1fr}
+  .fate{min-height:0}
+  .pips{display:none}
+  .topbar .who b{font-size:13px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:600px){.diploma .eyebrow{margin-top:52px}}
+</style>
+</head>
+<body>
+
+
+<!-- ============ START ============ -->
+<section id="scr-start">
+  <header class="hero">
+    <svg class="zig" style="left:3%;top:18px;width:90px" viewBox="0 0 90 40" fill="none"><path d="M3 30 L22 8 L36 28 L54 6 L68 26 L86 6" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg class="zig" style="right:4%;top:40px;width:70px;opacity:.9" viewBox="0 0 90 40" fill="none"><path d="M3 30 L22 8 L36 28 L54 6 L68 26 L86 6" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="hero-in">
+      <div>
+        <span class="brand"><svg viewBox="30 10 280 280"><defs>
+<linearGradient id="bcfur" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffab4a"/><stop offset=".6" stop-color="#f48d24"/><stop offset="1" stop-color="#e2761a"/></linearGradient>
+<radialGradient id="bciris" cx="50%" cy="38%" r="65%"><stop offset="0" stop-color="#6f93f0"/><stop offset=".45" stop-color="#2a4db0"/><stop offset="1" stop-color="#121c45"/></radialGradient>
+<linearGradient id="bcsuit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d52b8"/><stop offset="1" stop-color="#18306f"/></linearGradient>
+<radialGradient id="bcshine" cx="35%" cy="25%" r="50%"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+</defs><circle cx="170" cy="150" r="140" fill="#fff6ea"/><g>
+<!-- ears -->
+<path d="M80 118 C70 80 76 40 92 22 C116 34 140 56 152 78 Z" fill="url(#bcfur)" stroke="#1b2340" stroke-width="5" stroke-linejoin="round"/>
+<path d="M260 118 C270 80 264 40 248 22 C224 34 200 56 188 78 Z" fill="url(#bcfur)" stroke="#1b2340" stroke-width="5" stroke-linejoin="round"/>
+<path d="M92 98 C88 72 92 52 98 42 C114 52 126 64 134 78 Z" fill="#ffc9a6"/>
+<path d="M248 98 C252 72 248 52 242 42 C226 52 214 64 206 78 Z" fill="#ffc9a6"/>
+<path d="M98 80 l10 -6 M100 92 l12 -4 M242 80 l-10 -6 M240 92 l-12 -4" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".9"/>
+<!-- head -->
+<path d="M170 64 C234 64 270 98 274 140 L294 152 L274 163 L290 181 L264 189 C248 216 212 232 170 232 C128 232 92 216 76 189 L50 181 L66 163 L46 152 L66 140 C70 98 106 64 170 64 Z" fill="url(#bcfur)" stroke="#1b2340" stroke-width="5" stroke-linejoin="round"/>
+<path d="M170 64 C234 64 270 98 274 140 L294 152 L274 163 L290 181 L264 189 C248 216 212 232 170 232 C128 232 92 216 76 189 L50 181 L66 163 L46 152 L66 140 C70 98 106 64 170 64 Z" fill="url(#bcshine)"/>
+<!-- stripes -->
+<path d="M150 70 C153 84 152 94 146 104 M170 67 C171 82 171 94 170 106 M190 70 C187 84 188 94 194 104" stroke="#d96a10" stroke-width="7" stroke-linecap="round" fill="none"/>
+<path d="M68 150 C80 150 90 152 98 156 M72 170 C82 168 90 168 98 170 M272 150 C260 150 250 152 242 156 M268 170 C258 168 250 168 242 170" stroke="#d96a10" stroke-width="6" stroke-linecap="round" fill="none"/>
+<!-- muzzle -->
+<path d="M170 180 C150 166 122 174 122 196 C122 218 150 224 170 212 C190 224 218 218 218 196 C218 174 190 166 170 180 Z" fill="#fff4e6"/>
+<path d="M146 222 C156 230 184 230 194 222 C188 214 152 214 146 222 Z" fill="#fff4e6"/>
+<!-- blush -->
+<ellipse cx="92" cy="192" rx="17" ry="10" fill="#ff8f6b" opacity=".45"/>
+<ellipse cx="248" cy="192" rx="17" ry="10" fill="#ff8f6b" opacity=".45"/>
+<!-- eyes -->
+<circle cx="122" cy="144" r="35" fill="#fff" stroke="#1b2340" stroke-width="5"/>
+<circle cx="218" cy="144" r="35" fill="#fff" stroke="#1b2340" stroke-width="5"/>
+<circle cx="126" cy="149" r="27" fill="url(#bciris)"/>
+<circle cx="214" cy="149" r="27" fill="url(#bciris)"/>
+<circle cx="126" cy="150" r="13" fill="#0e1533"/>
+<circle cx="214" cy="150" r="13" fill="#0e1533"/>
+<ellipse cx="113" cy="134" rx="10" ry="12" fill="#fff"/>
+<ellipse cx="201" cy="134" rx="10" ry="12" fill="#fff"/>
+<circle cx="138" cy="163" r="4.5" fill="#fff"/>
+<circle cx="226" cy="163" r="4.5" fill="#fff"/>
+<path d="M126 170 C134 168 142 162 146 156 M214 170 C206 168 198 162 194 156" stroke="#9fb4ec" stroke-width="3" stroke-linecap="round" fill="none" opacity=".7"/>
+<path d="M86 132 C92 108 128 98 152 118 M254 132 C248 108 212 98 188 118" stroke="#1b2340" stroke-width="6" stroke-linecap="round" fill="none"/>
+<path d="M86 128 l-9 -6 M90 120 l-7 -9 M254 128 l9 -6 M250 120 l7 -9" stroke="#1b2340" stroke-width="4" stroke-linecap="round"/>
+<path d="M104 96 C114 90 126 90 134 94 M206 94 C214 90 226 90 236 96" stroke="#b9560c" stroke-width="5" stroke-linecap="round" fill="none"/>
+<!-- nose & mouth -->
+<path d="M170 196 C162 188 154 184 156 178 C158 172 166 172 170 178 C174 172 182 172 184 178 C186 184 178 188 170 196 Z" fill="#ff8fa3" stroke="#1b2340" stroke-width="3.5" stroke-linejoin="round"/>
+<ellipse cx="164" cy="179" rx="3" ry="2" fill="#fff" opacity=".8"/>
+<path d="M170 196 L170 202 M170 202 C165 212 152 212 148 204 M170 202 C175 212 188 212 192 204" stroke="#1b2340" stroke-width="4" fill="none" stroke-linecap="round"/>
+<!-- whiskers -->
+<path d="M120 196 L74 188 M120 204 L76 210 M220 196 L266 188 M220 204 L264 210" stroke="#1b2340" stroke-width="2.6" stroke-linecap="round" opacity=".55"/>
+</g></svg>История и котики</span>
+        <h1>Декабристский<br>жребий</h1>
+        <div class="band">Движение декабристов · 1812–1826</div>
+        <p class="lead">Вытяни судьбу участника тайных обществ и проживи её за десять испытаний. Ошибёшься трижды — и суд решит, что с тобой делать: тайная казнь или Сибирь.</p>
+      </div>
+      <div class="hero-cat" aria-hidden="true">
+        <svg viewBox="0 0 340 344"><defs>
+<linearGradient id="hcfur" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffab4a"/><stop offset=".6" stop-color="#f48d24"/><stop offset="1" stop-color="#e2761a"/></linearGradient>
+<radialGradient id="hciris" cx="50%" cy="38%" r="65%"><stop offset="0" stop-color="#6f93f0"/><stop offset=".45" stop-color="#2a4db0"/><stop offset="1" stop-color="#121c45"/></radialGradient>
+<linearGradient id="hcsuit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d52b8"/><stop offset="1" stop-color="#18306f"/></linearGradient>
+<radialGradient id="hcshine" cx="35%" cy="25%" r="50%"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+</defs>
+<circle cx="170" cy="182" r="152" fill="#fff6ea"/>
+<path d="M44 60 l5 12 12 5 -12 5 -5 12 -5 -12 -12 -5 12 -5Z M300 88 l4 9 9 4 -9 4 -4 9 -4 -9 -9 -4 9 -4Z M306 300 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3Z" fill="#fff"/>
+<ellipse cx="170" cy="338" rx="110" ry="6" fill="rgba(27,35,64,.18)"/>
+<!-- tail -->
+<path d="M258 322 C318 314 330 250 298 228 C290 222 280 226 284 236" stroke="#1b2340" stroke-width="32" stroke-linecap="round" fill="none"/>
+<path d="M258 322 C318 314 330 250 298 228 C290 222 280 226 284 236" stroke="url(#hcfur)" stroke-width="22" stroke-linecap="round" fill="none"/>
+<path d="M314 268 l-16 2 M316 250 l-15 -1 M306 290 l-14 -4" stroke="#d96a10" stroke-width="6" stroke-linecap="round"/>
+<!-- suit -->
+<path d="M58 344 C54 270 100 228 170 228 C240 228 286 270 282 344 Z" fill="url(#hcsuit)" stroke="#1b2340" stroke-width="5" stroke-linejoin="round"/>
+<path d="M140 228 L170 290 L200 228 Z" fill="#fff" stroke="#1b2340" stroke-width="4" stroke-linejoin="round"/>
+<path d="M140 228 L170 290 L120 262 L134 248 L118 238 Z" fill="#3459c2" stroke="#1b2340" stroke-width="4" stroke-linejoin="round"/>
+<path d="M200 228 L170 290 L220 262 L206 248 L222 238 Z" fill="#3459c2" stroke="#1b2340" stroke-width="4" stroke-linejoin="round"/>
+<path d="M170 242 L146 230 C142 238 142 250 146 256 Z M170 242 L194 230 C198 238 198 250 194 256 Z" fill="#7a4fc4" stroke="#1b2340" stroke-width="4" stroke-linejoin="round"/>
+<rect x="162" y="234" width="16" height="16" rx="5" fill="#8f66d6" stroke="#1b2340" stroke-width="4"/>
+<circle cx="170" cy="306" r="5.5" fill="#f0861f" stroke="#1b2340" stroke-width="2.5"/>
+<circle cx="170" cy="328" r="5.5" fill="#f0861f" stroke="#1b2340" stroke-width="2.5"/>
+<path d="M92 290 L124 282" stroke="#1b2340" stroke-width="4" stroke-linecap="round"/>
+<path d="M98 289 L104 274 L112 280 L118 272 L122 284 Z" fill="#f0861f" stroke="#1b2340" stroke-width="3" stroke-linejoin="round"/>
+<g>
+<!-- ears -->
+<path d="M80 118 C70 80 76 40 92 22 C116 34 140 56 152 78 Z" fill="url(#hcfur)" stroke="#1b2340" stroke-width="5" stroke-linejoin="round"/>
+<path d="M260 118 C270 80 264 40 248 22 C224 34 200 56 188 78 Z" fill="url(#hcfur)" stroke="#1b2340" stroke-width="5" stroke-linejoin="round"/>
+<path d="M92 98 C88 72 92 52 98 42 C114 52 126 64 134 78 Z" fill="#ffc9a6"/>
+<path d="M248 98 C252 72 248 52 242 42 C226 52 214 64 206 78 Z" fill="#ffc9a6"/>
+<path d="M98 80 l10 -6 M100 92 l12 -4 M242 80 l-10 -6 M240 92 l-12 -4" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".9"/>
+<!-- head -->
+<path d="M170 64 C234 64 270 98 274 140 L294 152 L274 163 L290 181 L264 189 C248 216 212 232 170 232 C128 232 92 216 76 189 L50 181 L66 163 L46 152 L66 140 C70 98 106 64 170 64 Z" fill="url(#hcfur)" stroke="#1b2340" stroke-width="5" stroke-linejoin="round"/>
+<path d="M170 64 C234 64 270 98 274 140 L294 152 L274 163 L290 181 L264 189 C248 216 212 232 170 232 C128 232 92 216 76 189 L50 181 L66 163 L46 152 L66 140 C70 98 106 64 170 64 Z" fill="url(#hcshine)"/>
+<!-- stripes -->
+<path d="M150 70 C153 84 152 94 146 104 M170 67 C171 82 171 94 170 106 M190 70 C187 84 188 94 194 104" stroke="#d96a10" stroke-width="7" stroke-linecap="round" fill="none"/>
+<path d="M68 150 C80 150 90 152 98 156 M72 170 C82 168 90 168 98 170 M272 150 C260 150 250 152 242 156 M268 170 C258 168 250 168 242 170" stroke="#d96a10" stroke-width="6" stroke-linecap="round" fill="none"/>
+<!-- muzzle -->
+<path d="M170 180 C150 166 122 174 122 196 C122 218 150 224 170 212 C190 224 218 218 218 196 C218 174 190 166 170 180 Z" fill="#fff4e6"/>
+<path d="M146 222 C156 230 184 230 194 222 C188 214 152 214 146 222 Z" fill="#fff4e6"/>
+<!-- blush -->
+<ellipse cx="92" cy="192" rx="17" ry="10" fill="#ff8f6b" opacity=".45"/>
+<ellipse cx="248" cy="192" rx="17" ry="10" fill="#ff8f6b" opacity=".45"/>
+<!-- eyes -->
+<circle cx="122" cy="144" r="35" fill="#fff" stroke="#1b2340" stroke-width="5"/>
+<circle cx="218" cy="144" r="35" fill="#fff" stroke="#1b2340" stroke-width="5"/>
+<circle cx="126" cy="149" r="27" fill="url(#hciris)"/>
+<circle cx="214" cy="149" r="27" fill="url(#hciris)"/>
+<circle cx="126" cy="150" r="13" fill="#0e1533"/>
+<circle cx="214" cy="150" r="13" fill="#0e1533"/>
+<ellipse cx="113" cy="134" rx="10" ry="12" fill="#fff"/>
+<ellipse cx="201" cy="134" rx="10" ry="12" fill="#fff"/>
+<circle cx="138" cy="163" r="4.5" fill="#fff"/>
+<circle cx="226" cy="163" r="4.5" fill="#fff"/>
+<path d="M126 170 C134 168 142 162 146 156 M214 170 C206 168 198 162 194 156" stroke="#9fb4ec" stroke-width="3" stroke-linecap="round" fill="none" opacity=".7"/>
+<path d="M86 132 C92 108 128 98 152 118 M254 132 C248 108 212 98 188 118" stroke="#1b2340" stroke-width="6" stroke-linecap="round" fill="none"/>
+<path d="M86 128 l-9 -6 M90 120 l-7 -9 M254 128 l9 -6 M250 120 l7 -9" stroke="#1b2340" stroke-width="4" stroke-linecap="round"/>
+<path d="M104 96 C114 90 126 90 134 94 M206 94 C214 90 226 90 236 96" stroke="#b9560c" stroke-width="5" stroke-linecap="round" fill="none"/>
+<!-- nose & mouth -->
+<path d="M170 196 C162 188 154 184 156 178 C158 172 166 172 170 178 C174 172 182 172 184 178 C186 184 178 188 170 196 Z" fill="#ff8fa3" stroke="#1b2340" stroke-width="3.5" stroke-linejoin="round"/>
+<ellipse cx="164" cy="179" rx="3" ry="2" fill="#fff" opacity=".8"/>
+<path d="M170 196 L170 202 M170 202 C165 212 152 212 148 204 M170 202 C175 212 188 212 192 204" stroke="#1b2340" stroke-width="4" fill="none" stroke-linecap="round"/>
+<!-- whiskers -->
+<path d="M120 196 L74 188 M120 204 L76 210 M220 196 L266 188 M220 204 L264 210" stroke="#1b2340" stroke-width="2.6" stroke-linecap="round" opacity=".55"/>
+</g>
+<!-- scroll + paw -->
+<g transform="rotate(-12 238 280)">
+<rect x="206" y="250" width="74" height="58" rx="6" fill="#fffdf8" stroke="#1b2340" stroke-width="4"/>
+<rect x="200" y="244" width="12" height="70" rx="6" fill="#f3e3c4" stroke="#1b2340" stroke-width="4"/>
+<rect x="274" y="244" width="12" height="70" rx="6" fill="#f3e3c4" stroke="#1b2340" stroke-width="4"/>
+<path d="M222 266 H266 M222 278 H260 M222 290 H248" stroke="#7a4fc4" stroke-width="4.5" stroke-linecap="round"/>
+<circle cx="262" cy="296" r="9" fill="#f0861f" stroke="#1b2340" stroke-width="3"/>
+</g>
+<path d="M196 300 C194 282 210 274 224 278 C238 282 240 300 230 308 C222 314 200 314 196 300 Z" fill="url(#hcfur)" stroke="#1b2340" stroke-width="5"/>
+<path d="M208 284 l-2 10 M218 282 l0 11 M228 286 l2 9" stroke="#1b2340" stroke-width="3" stroke-linecap="round"/>
+</svg>
+      </div>
+    </div>
+    <div class="rules">
+      <div class="rule"><b>10</b><span>испытаний — 10 поворотов твоей судьбы</span></div>
+      <div class="rule"><b>2</b><span>попытки на каждое испытание: верно — успех, нет — неуспех</span></div>
+      <div class="rule"><b>✎</b><span>можно решать с учебником (§&nbsp;49–54) — на карточке указана страница</span></div>
+      <div class="rule"><b>3</b><span>неуспеха — арест и приговор: тайная казнь или Сибирь</span></div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="sec-h">
+      <h2>Выбери судьбу</h2>
+      <button class="btn btn-o" id="drawBtn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="4" stroke="#fff" stroke-width="2.5"/><circle cx="8.5" cy="8.5" r="1.7" fill="#fff"/><circle cx="15.5" cy="15.5" r="1.7" fill="#fff"/><circle cx="12" cy="12" r="1.7" fill="#fff"/></svg>
+        Тянуть жребий
+      </button>
+    </div>
+    <div class="fates" id="fates"></div>
+
+    <div class="howto">
+      <div class="how"><h3>Справка</h3>Перед каждым испытанием — справка, которая погружает в эпоху. Готового ответа в ней нет: ищи его в памяти или в учебнике.</div>
+      <div class="how"><h3>Учебник рядом</h3><span class="ic">с.</span>Номер страницы учебника подскажет, где искать. Открой — это не списывание, а работа с источником.</div>
+      <div class="how"><h3>Приговор</h3>Ошибся в первый раз — получишь подсказку. Во второй — неуспех и разбор. Три неуспеха — арест. Если до ареста ты успел пройти хотя бы три испытания, отправишься в Сибирь. Если нет — тебя тайно повесят.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GAME ============ -->
+<section id="scr-game" class="hide">
+  <div class="topbar"><div class="topbar-in">
+    <div class="who" id="gWho"></div>
+    <div class="score" id="gScore" aria-label="Прогресс"></div>
+    <button class="exit" id="exitBtn">К судьбам</button>
+  </div></div>
+  <div class="wrap">
+    <div class="game">
+      <ol class="path" id="gPath"></ol>
+      <article class="card" id="gCard" aria-live="polite"></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ END ============ -->
+<section id="scr-end" class="hide">
+  <div class="wrap" id="endWrap"></div>
+</section>
+
+<section class="subscribe">
+  <div class="sub-in">
+    <div class="sub-cat" aria-hidden="true"><svg viewBox="30 10 280 280"><defs>
+<linearGradient id="scfur" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffab4a"/><stop offset=".6" stop-color="#f48d24"/><stop offset="1" stop-color="#e2761a"/></linearGradient>
+<radialGradient id="sciris" cx="50%" cy="38%" r="65%"><stop offset="0" stop-color="#6f93f0"/><stop offset=".45" stop-color="#2a4db0"/><stop offset="1" stop-color="#121c45"/></radialGradient>
+<linearGradient id="scsuit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d52b8"/><stop offset="1" stop-color="#18306f"/></linearGradient>
+<radialGradient id="scshine" cx="35%" cy="25%" r="50%"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+</defs><circle cx="170" cy="150" r="140" fill="#fff6ea"/><g>
+<!-- ears -->
+<path d="M80 118 C70 80 76 40 92 22 C116 34 140 56 152 78 Z" fill="url(#scfur)" stroke="#1b2340" stroke-width="5" stroke-linejoin="round"/>
+<path d="M260 118 C270 80 264 40 248 22 C224 34 200 56 188 78 Z" fill="url(#scfur)" stroke="#1b2340" stroke-width="5" stroke-linejoin="round"/>
+<path d="M92 98 C88 72 92 52 98 42 C114 52 126 64 134 78 Z" fill="#ffc9a6"/>
+<path d="M248 98 C252 72 248 52 242 42 C226 52 214 64 206 78 Z" fill="#ffc9a6"/>
+<path d="M98 80 l10 -6 M100 92 l12 -4 M242 80 l-10 -6 M240 92 l-12 -4" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".9"/>
+<!-- head -->
+<path d="M170 64 C234 64 270 98 274 140 L294 152 L274 163 L290 181 L264 189 C248 216 212 232 170 232 C128 232 92 216 76 189 L50 181 L66 163 L46 152 L66 140 C70 98 106 64 170 64 Z" fill="url(#scfur)" stroke="#1b2340" stroke-width="5" stroke-linejoin="round"/>
+<path d="M170 64 C234 64 270 98 274 140 L294 152 L274 163 L290 181 L264 189 C248 216 212 232 170 232 C128 232 92 216 76 189 L50 181 L66 163 L46 152 L66 140 C70 98 106 64 170 64 Z" fill="url(#scshine)"/>
+<!-- stripes -->
+<path d="M150 70 C153 84 152 94 146 104 M170 67 C171 82 171 94 170 106 M190 70 C187 84 188 94 194 104" stroke="#d96a10" stroke-width="7" stroke-linecap="round" fill="none"/>
+<path d="M68 150 C80 150 90 152 98 156 M72 170 C82 168 90 168 98 170 M272 150 C260 150 250 152 242 156 M268 170 C258 168 250 168 242 170" stroke="#d96a10" stroke-width="6" stroke-linecap="round" fill="none"/>
+<!-- muzzle -->
+<path d="M170 180 C150 166 122 174 122 196 C122 218 150 224 170 212 C190 224 218 218 218 196 C218 174 190 166 170 180 Z" fill="#fff4e6"/>
+<path d="M146 222 C156 230 184 230 194 222 C188 214 152 214 146 222 Z" fill="#fff4e6"/>
+<!-- blush -->
+<ellipse cx="92" cy="192" rx="17" ry="10" fill="#ff8f6b" opacity=".45"/>
+<ellipse cx="248" cy="192" rx="17" ry="10" fill="#ff8f6b" opacity=".45"/>
+<!-- eyes -->
+<circle cx="122" cy="144" r="35" fill="#fff" stroke="#1b2340" stroke-width="5"/>
+<circle cx="218" cy="144" r="35" fill="#fff" stroke="#1b2340" stroke-width="5"/>
+<circle cx="126" cy="149" r="27" fill="url(#sciris)"/>
+<circle cx="214" cy="149" r="27" fill="url(#sciris)"/>
+<circle cx="126" cy="150" r="13" fill="#0e1533"/>
+<circle cx="214" cy="150" r="13" fill="#0e1533"/>
+<ellipse cx="113" cy="134" rx="10" ry="12" fill="#fff"/>
+<ellipse cx="201" cy="134" rx="10" ry="12" fill="#fff"/>
+<circle cx="138" cy="163" r="4.5" fill="#fff"/>
+<circle cx="226" cy="163" r="4.5" fill="#fff"/>
+<path d="M126 170 C134 168 142 162 146 156 M214 170 C206 168 198 162 194 156" stroke="#9fb4ec" stroke-width="3" stroke-linecap="round" fill="none" opacity=".7"/>
+<path d="M86 132 C92 108 128 98 152 118 M254 132 C248 108 212 98 188 118" stroke="#1b2340" stroke-width="6" stroke-linecap="round" fill="none"/>
+<path d="M86 128 l-9 -6 M90 120 l-7 -9 M254 128 l9 -6 M250 120 l7 -9" stroke="#1b2340" stroke-width="4" stroke-linecap="round"/>
+<path d="M104 96 C114 90 126 90 134 94 M206 94 C214 90 226 90 236 96" stroke="#b9560c" stroke-width="5" stroke-linecap="round" fill="none"/>
+<!-- nose & mouth -->
+<path d="M170 196 C162 188 154 184 156 178 C158 172 166 172 170 178 C174 172 182 172 184 178 C186 184 178 188 170 196 Z" fill="#ff8fa3" stroke="#1b2340" stroke-width="3.5" stroke-linejoin="round"/>
+<ellipse cx="164" cy="179" rx="3" ry="2" fill="#fff" opacity=".8"/>
+<path d="M170 196 L170 202 M170 202 C165 212 152 212 148 204 M170 202 C175 212 188 212 192 204" stroke="#1b2340" stroke-width="4" fill="none" stroke-linecap="round"/>
+<!-- whiskers -->
+<path d="M120 196 L74 188 M120 204 L76 210 M220 196 L266 188 M220 204 L264 210" stroke="#1b2340" stroke-width="2.6" stroke-linecap="round" opacity=".55"/>
+</g></svg></div>
+    <div class="sub-txt"><b>Понравилась игра?</b><span>Подпишись на «История и котики» — новые игры, скрипты и разборы к ЕГЭ и ОГЭ.</span></div>
+    <a class="btn btn-o sub-link" href="https://t.me/historyandcats" target="_blank" rel="noopener">Подписаться</a>
+  </div>
+</section>
+
+<script>
+(() => {
+"use strict";
+/* Ссылка для кнопок «Подписаться» */
+const SUB_URL = "https://t.me/historyandcats";
+const applySub=()=>document.querySelectorAll(".sub-link").forEach(a=>{a.href=SUB_URL;});
+
+/* ===================== ЭМБЛЕМЫ ===================== */
+const EMB = {
+  veteran:(c)=>`<svg viewBox="0 0 50 50" fill="none"><ellipse cx="25" cy="7" rx="4" ry="6" fill="${c}" opacity=".55"/><path d="M12 12 H38 L35 38 H15 Z" fill="${c}"/><path d="M12 12 H38 L37.4 17 H12.6 Z" fill="#fff" opacity=".3"/><path d="M25 21 L27.6 26.3 L33.4 27 L29.2 31 L30.3 36.7 L25 34 L19.7 36.7 L20.8 31 L16.6 27 L22.4 26.3 Z" fill="#fff"/><path d="M14 38 H36 C36 43 30 46 22 45 C18 44.5 15 42 14 38 Z" fill="${c}" opacity=".55"/></svg>`,
+  south:(c)=>`<svg viewBox="0 0 50 50" fill="none"><path d="M9 7 C20 14 30 24 38 37" stroke="${c}" stroke-width="5" stroke-linecap="round" opacity=".55"/><path d="M33 34 L41 42 M34 42 L41 35" stroke="${c}" stroke-width="4.5" stroke-linecap="round" opacity=".55"/><path d="M41 7 C30 14 20 24 12 37" stroke="${c}" stroke-width="5" stroke-linecap="round"/><path d="M17 34 L9 42 M16 42 L9 35" stroke="${c}" stroke-width="4.5" stroke-linecap="round"/><circle cx="25" cy="22" r="3.5" fill="#fff" stroke="${c}" stroke-width="2.5"/></svg>`,
+  poet:(c)=>`<svg viewBox="0 0 50 50" fill="none"><path d="M43 4 C29 7 19 17 17 32 L21 33 C24 22 32 13 43 4 Z" fill="${c}"/><path d="M43 4 C42 15 35 24 24 28" stroke="${c}" stroke-width="3" stroke-linecap="round" opacity=".55"/><path d="M17 32 L14 38" stroke="${c}" stroke-width="3" stroke-linecap="round"/><path d="M6 34 H24 L22 46 H8 Z" fill="${c}" opacity=".55"/><rect x="9" y="30" width="12" height="5" rx="2" fill="${c}"/></svg>`
+};
+
+/* ===================== СУДЬБЫ ===================== */
+const FATES = [
+{
+  id:"veteran", who:"Офицер 1812 года", name:"Сергей, поручик гвардии", k:"#1f3c8f", kb:"#eef2fb",
+  intro:"1812 год. Ты молодой гвардейский офицер. Впереди — Бородино и Париж, а потом офицерские артели, тайные общества и Сенатская площадь.",
+  arrest:"Следствие собрало на тебя достаточно показаний: имя в списках общества, неосторожные слова в казарме, оружие в руках на площади.",
+  levels:[
+  { year:"26 августа 1812", title:"Бородинское поле", page:"330–331",
+    story:"Твой полк стоит в центре русской позиции. С утра французы бьют по левому флангу, а к полудню Наполеон переносит главный удар в центр — прямо на высоту, где стоят пушки.",
+    ref:"Кутузов выбрал позицию у села Бородино в 124 км от Москвы. Утром французы атаковали Багратионовы флеши на левом фланге и после нескольких часов боя захватили их. Затем удар пришёлся на высоту Курганную.",
+    type:"choice", q:"Как называлось укрепление на высоте Курганной, состоявшее из 18 пушек?",
+    opts:["Батарея Н. Раевского","Багратионовы флеши","Тарутинский лагерь","Батарея П. Чичагова"],
+    ans:0, hint:"Флеши стояли на левом фланге, а укрепление в центре носит имя генерала, чей корпус героически держался у Салтановки.",
+    exp:"На высоте Курганной стояла батарея Н. Раевского — полевое артиллерийское укрепление из 18 пушек. К середине дня французы её захватили, но прорвать оборону не смогли.",
+    win:"Ты выстоял у батареи — тебя представили к награде.", lose:"В дыму ты потерял свою роту — командир смотрит косо." },
+  { year:"Март 1814", title:"Русские в Париже", page:"341, 357",
+    story:"18 марта 1814 г. Париж капитулировал. Ты проходишь по его улицам, слушаешь споры в кафе, читаешь газеты и думаешь о том, как живут люди на родине.",
+    ref:"Александр I въехал в Париж скромно, отменил обычай поднесения ключей и по его настоянию Людовик XVIII вернулся конституционным монархом. Многие офицеры возвращались домой другими людьми.",
+    type:"multi", q:"Выбери ВСЁ, что, по учебнику, молодые офицеры увидели и ощутили в ходе войны 1812 г. и Заграничных походов.",
+    opts:["Лучшие черты характера русского народа","Республиканские и конституционные порядки в других странах","Себя гражданами великой державы, которой не к лицу крепостное право","Отмену крепостного права в России сразу после победы","Введение конституции в России в 1814 г."],
+    ans:[0,1,2], hint:"Ни конституции, ни отмены крепостного права в России после победы не случилось — вспомни, чем закончились проекты Александра I.",
+    exp:"Офицеры увидели лучшие черты народа, познакомились с республиканскими и конституционными порядками и ощутили себя гражданами великой державы, которой не к лицу крепостное право.",
+    win:"Ты привёз из Парижа книги и новые мысли.", lose:"Ты вернулся из похода растерянным и разочарованным." },
+  { year:"1815", title:"Книги и ложи", page:"357",
+    story:"В Петербурге ты вступаешь в масонскую ложу и зачитываешься французскими философами. Товарищи спорят, откуда в головах офицеров столько вольных мыслей.",
+    ref:"Учебник делит причины декабризма на внутренние (связанные с жизнью самой России) и внешние (пришедшие из Европы).",
+    type:"multi", q:"Выбери ВСЕ ВНЕШНИЕ причины декабризма.",
+    opts:["Идеи Просвещения","Уроки Французской революции конца XVIII в.","Работа масонских лож","Деятельность итальянских карбонариев","Дворцовые перевороты XVIII в.","Либеральные обещания Александра I"],
+    ans:[0,1,2,3], hint:"Дворцовые перевороты и обещания императора — это то, что происходило внутри России.",
+    exp:"Внешние причины: идеи Просвещения, уроки Французской революции, работа масонских лож, деятельность карбонариев и других тайных обществ Европы. Перевороты XVIII в. и обещания Александра I — внутренние причины.",
+    win:"Ты стал своим в кругу вольнодумцев.", lose:"Ты сболтнул лишнего в ложе — тебя запомнили." },
+  { year:"1816", title:"Первое тайное общество", page:"357–358",
+    story:"После кружков и офицерских артелей друзья зовут тебя в настоящее тайное общество. Около 30 человек, клятвы, секретность.",
+    ref:"В 1816 г. появился «Союз спасения». В нём состояло около 30 человек. Позже революционеры поняли, что без поддержки верхушки гвардии и части сановного Петербурга их замысел ни к чему не приведёт.",
+    type:"choice", q:"На что был ориентирован «Союз спасения»?",
+    opts:["На подготовку государственного переворота","На воспитание общества в прогрессивном духе за 20 лет","На созыв Земского собора","На поддержку восставших военных поселян"],
+    ans:0, hint:"Подумай, зачем им могла понадобиться поддержка гвардии и сановников.",
+    exp:"«Союз спасения» был ориентирован на подготовку государственного переворота, но его члены поняли, что без поддержки верхушки гвардии убийство императора ни к чему не приведёт.",
+    win:"Тебе доверили тайну общества.", lose:"Твоё имя попало в списки, которые потом найдут следователи." },
+  { year:"1818", title:"Новый союз", page:"358",
+    story:"«Союз спасения» распущен, на смену ему пришло новое общество. Теперь в нём до 200 членов, а ставка сделана не на штыки.",
+    ref:"Члены нового общества уже не надеялись на штыки гвардии. Новый метод действия заставил радикалов резко расширить свои ряды.",
+    type:"choice", q:"Как назывался союз 1818 г. и какой метод он выбрал?",
+    opts:["«Союз благоденствия» — воспитать общество в прогрессивном духе за 20 лет","«Союз благоденствия» — немедленное цареубийство","«Северное общество» — военная революция в столице","«Южное общество» — восстание на манёврах 2-й армии"],
+    ans:0, hint:"Северное и Южное общества появятся позже, в 1821 г.",
+    exp:"«Союз благоденствия» (1818) пытался воспитать общество в прогрессивном духе, отведя на это 20 лет; в нём было до 200 членов.",
+    win:"Ты читаешь лекции солдатам и учишь их грамоте.", lose:"Ты охладел к делу — товарищи шепчутся за спиной." },
+  { year:"1820", title:"Семёновская история", page:"352",
+    story:"В Петербурге взбунтовался гвардейский Семёновский полк. Твои знакомые-офицеры тайно сочувствуют солдатам.",
+    ref:"Недовольство, вызванное жестоким отношением командиров, иногда охватывало солдат армии и гвардии и приводило к бунтам. Самый известный из них случился в Петербурге в 1820 г.",
+    type:"choice", q:"Что довело солдат Семёновского полка до открытого протеста?",
+    opts:["Грубость командира полка","Перевод полка в военные поселения","Задержка жалованья","Указ о запрете тайных обществ"],
+    ans:0, hint:"Речь в справке идёт об отношении командиров.",
+    exp:"Солдат Семёновского полка довела до открытого протеста грубость командира полка.",
+    win:"Ты промолчал — и сохранил место в гвардии.", lose:"Ты публично заступился за солдат — тебя заметила полиция." },
+  { year:"1820", title:"Пример Испании", page:"358–359",
+    story:"Газеты пишут о революции в Испании. Товарищи восклицают: «Наша революция будет подобна испанской — без единой капли крови!»",
+    ref:"В 1820 г. в испанских войсках у порта Кадис вспыхнуло восстание. Король был вынужден восстановить конституцию 1812 г., предводитель восстания стал председателем кортесов.",
+    type:"choice", q:"Кто возглавил восстание 1820 г. в Испании, вдохновившее декабристов?",
+    opts:["Рафаэль Риего","Александр Ипсиланти","Людовик XVIII","Клеменс Меттерних"],
+    ans:0, hint:"Ипсиланти возглавлял греков, а Людовик и Меттерних — противники революций.",
+    exp:"Восстание возглавил Рафаэль Риего. Позже Испанская революция была подавлена французской интервенцией.",
+    win:"Ты поверил, что переворот можно сделать одной армией.", lose:"Ты громко пересказывал испанские новости в казарме." },
+  { year:"1822", title:"Подписка", page:"352",
+    story:"Командир полка собирает офицеров и кладёт на стол бумагу. Каждый должен её подписать.",
+    ref:"После 1815 г. начался реакционный период царствования, усилившийся в 1820-е гг. Отказ императора от реформ был вызван революциями в Европе и недовольством в гвардии.",
+    type:"choice", q:"Что запретил указ 1822 г. и какую подписку брали с офицеров?",
+    opts:["Тайные общества и масонские ложи; подписка, что офицер в них не состоит","Чтение французских книг; подписка о сдаче книг","Выезд за границу; подписка о невыезде","Дуэли; подписка об отказе от поединков"],
+    ans:0, hint:"Вспомни, где состояли многие руководители декабристов, кроме тайных обществ.",
+    exp:"В 1822 г. издан указ о запрещении любых тайных обществ и масонских лож, с офицеров взяли подписку, что они в подобных обществах не состоят.",
+    win:"Ты подписал бумагу, а дело продолжил ещё осторожнее.", lose:"Ты отказался подписывать — начальство взяло тебя на заметку." },
+  { year:"1816–1824", title:"Летопись общества", page:"357–361",
+    story:"Ночью у камина старый товарищ просит тебя вспомнить, как всё начиналось и к чему пришло.",
+    ref:"Тайные общества сменяли друг друга: менялись цели, методы и численность. В итоге два центра движения договорились о совместных действиях.",
+    type:"order", q:"Расставь события в хронологическом порядке.",
+    items:["Создание «Союза спасения»","Создание «Союза благоденствия»","Образование Северного и Южного обществ","Договорённость о сроках совместного выступления"],
+    hint:"Два «союза» шли первыми, а договориться о сроках можно было только после появления обоих обществ.",
+    exp:"1816 — «Союз спасения»; 1818 — «Союз благоденствия»; 1821 — Северное и Южное общества; 1824 — договорённость о совместном выступлении летом 1826 г.",
+    win:"Товарищи доверили тебе связь с южанами.", lose:"Ты перепутал явки — письмо попало не в те руки." },
+  { year:"14 декабря 1825", title:"Сенатская площадь", page:"362–363",
+    story:"Ты выводишь свою роту на Сенатскую площадь «защищать законного императора Константина». Люди стоят часами и ждут — неизвестно чего.",
+    ref:"Восставшие опирались на верноподданнические чувства солдат и призывали защитить «законного» императора Константина от «узурпатора» Николая. Все дальнейшие действия свелись к стоянию на площади.",
+    type:"multi", q:"Выбери ВСЕ верные факты о событиях 14 декабря 1825 г.",
+    opts:["На площадь вывели свыше 3 тыс. солдат и матросов","Назначенный диктатор С. Трубецкой не явился на площадь","Восставшие захватили Петропавловскую крепость","П. Каховский смертельно ранил М. Милорадовича","Восстание было подавлено залпами картечи"],
+    ans:[0,1,3,4], hint:"План захвата крепости, Сената и Зимнего не был выполнен.",
+    exp:"Свыше 3 тыс. восставших простояли на площади без руководства: Трубецкой не явился, Каховский смертельно ранил Милорадовича, а подоспевшая артиллерия картечью рассеяла мятежников.",
+    win:"Ты успел увести роту с площади до первого залпа.", lose:"Тебя схватили у Невы с оружием в руках." }
+  ],
+  endings:[
+    {min:10,title:"Чист перед следствием",text:"На площади ты сумел увести солдат до первого залпа, а бумаги общества успел сжечь. Следствие не нашло против тебя улик. Ты остался в гвардии — и помнил товарищей всю жизнь."},
+    {min:9,title:"Разжалован и отправлен на Кавказ",text:"Следствие сочло тебя второстепенным участником. Тебя разжаловали в рядовые и отправили в действующую армию на Кавказ — снова воевать, как в 1812 году."},
+    {min:0,title:"Под надзором",text:"Тебя освободили, но ты навсегда остался под подозрением. Карьера в гвардии закончилась, а письма твои ещё долго вскрывала полиция."}
+  ]
+},
+{
+  id:"south", who:"Член Южного общества", name:"Андрей, офицер 2-й армии", k:"#f0861f", kb:"#fff3e6",
+  intro:"Юг России. Ты служишь во 2-й армии и вступаешь в Южное общество. Один из его основателей — Пестель, а цель — республика.",
+  arrest:"Бумаги южан попали к следователям, и среди них оказались твои письма. Отпираться было бесполезно.",
+  levels:[
+  { year:"1821", title:"Новое общество", page:"358–359",
+    story:"«Союз благоденствия» распался. Южане собираются и решают: теперь — военная революция. Ты спрашиваешь: а народ?",
+    ref:"В 1821 г. Северное и Южное общества начали готовить военную революцию. С помощью своих воинских частей заговорщики надеялись захватить власть в столице и других важных центрах «без крови и беспорядков».",
+    type:"choice", q:"Как декабристы относились к участию народа в восстании?",
+    opts:["Считали его ненужным и даже вредным","Рассчитывали на всенародное восстание","Хотели поднять на борьбу казаков Дона","Собирались опереться на военных поселян"],
+    ans:0, hint:"По сути, они готовили государственный переворот силами армии.",
+    exp:"Участие народа декабристы считали не только ненужным, но и вредным: это должен был стать государственный переворот силами армии.",
+    win:"Тебя приняли в общество как надёжного офицера.", lose:"Ты предложил поднять крестьян — товарищи насторожились." },
+  { year:"1821", title:"Командир полка", page:"359",
+    story:"Ты знакомишься с руководителем южан — полковником, героем Бородина, награждённым золотой шпагой «За храбрость».",
+    ref:"Павел Пестель родился в семье крупного чиновника, на юге вёл разведку в приграничных с Турцией районах, был членом «Союза спасения» и «Союза благоденствия», одним из основателей Южного общества.",
+    type:"choice", q:"Каким полком командовал П. Пестель, приведя его в образцовое состояние?",
+    opts:["Вятским","Черниговским","Семёновским","Преображенским"],
+    ans:0, hint:"Черниговский полк поднимет другой декабрист, а Семёновский — гвардейский полк из Петербурга.",
+    exp:"Пестель командовал Вятским полком и тайно готовил его к походу на Москву и Петербург.",
+    win:"Пестель приблизил тебя к себе.", lose:"Ты не узнал Пестеля в лицо — неловкость запомнилась." },
+  { year:"1823", title:"«Русская правда»", page:"359–360",
+    story:"Пестель читает тебе свою программу. Ты записываешь главное, чтобы передать товарищам.",
+    ref:"«Русская правда» была принята Южным обществом в качестве программы. Пестель надеялся, что благодарные за освобождение крестьяне поддержат переворот.",
+    type:"multi", q:"Выбери ВСЕ положения «Русской правды».",
+    opts:["Россия становится республикой","10-летняя диктатура Временного верховного правительства","Земля делится на два фонда — общественный и частный","Конституционная монархия, император с представительскими функциями","Крестьянам — надел в две десятины","Запрет союзов, собраний и забастовок на 10 лет"],
+    ans:[0,1,2,5], hint:"Монархия и надел в две десятины — это программа северянина Н. Муравьёва.",
+    exp:"«Русская правда»: республика, 10-летняя диктатура Временного верховного правительства, запрет союзов и собраний, политическая полиция, деление земли на общественный и частный фонды.",
+    win:"Ты стал хранителем копии программы.", lose:"Ты перепутал программы на собрании — Пестель был в ярости." },
+  { year:"1823", title:"Будущие правители", page:"359",
+    story:"Ты спрашиваешь Пестеля: кто же будет править после переворота? Неужели сами заговорщики?",
+    ref:"Пестель предлагал включить во Временное верховное правительство не революционеров, а людей, известных либеральными взглядами и имевших вес в обществе.",
+    type:"multi", q:"Кого Пестель предлагал включить во Временное верховное правительство?",
+    opts:["М. Сперанского","Адмирала Н. Мордвинова","Генерала А. Ермолова","Генерала П. Киселёва","А. Аракчеева","Н. Карамзина"],
+    ans:[0,1,2,3], hint:"Аракчеев — символ реакции, а Карамзин — консерватор, сторонник самодержавия.",
+    exp:"Пестель называл М. Сперанского, адмирала Н. Мордвинова, генералов А. Ермолова и П. Киселёва.",
+    win:"Тебе поручили составить список будущих министров.", lose:"Твой черновик со списком имён потерялся." },
+  { year:"1824", title:"«Так будет же республика!»", page:"360–361",
+    story:"Ты едешь с Пестелем в Петербург на встречу с северянами. Споры жаркие. Пестель бьёт кулаком по столу.",
+    ref:"Между двумя центрами движения шли трудные дискуссии о диктатуре Временного правительства и форме политического режима. Но в 1824 г. общества всё же нашли общее решение.",
+    type:"choice", q:"О чём договорились Северное и Южное общества в 1824 г.?",
+    opts:["О совместном выступлении летом 1826 г. на манёврах 2-й армии","О принятии «Конституции» Муравьёва общей программой","О роспуске обществ и возвращении к просвещению","О немедленном восстании в Таганроге"],
+    ans:0, hint:"На манёврах должен был присутствовать сам Александр I с братьями.",
+    exp:"Общества договорились о сроках совместного выступления: летом 1826 г. на больших манёврах 2-й армии в Малороссии, одновременно в Петербурге и на юге.",
+    win:"Ты возвращаешься на юг с секретными указаниями.", lose:"По дороге ты разговорился с попутчиком — тот оказался осведомителем." },
+  { year:"1825", title:"Кто есть кто", page:"359–364",
+    story:"Новичок в обществе путается в именах. Ты объясняешь ему, кто чем известен.",
+    ref:"Во главе декабристского движения стояли офицеры из знатных семей: одни писали программы, другие должны были вести полки.",
+    type:"match", q:"Сопоставь декабриста и то, чем он известен.",
+    left:["П. Пестель","Н. Муравьёв","С. Трубецкой","С. Муравьёв-Апостол"],
+    right:["Автор «Русской правды»","Автор «Конституции»","Назначенный диктатор восстания 14 декабря","Поднял Черниговский полк"],
+    hint:"Муравьёвых двое: один писал программу, другой командовал полком на юге.",
+    exp:"Пестель — «Русская правда», Н. Муравьёв — «Конституция», С. Трубецкой — диктатор восстания, не явившийся на площадь, С. Муравьёв-Апостол — руководитель восстания Черниговского полка.",
+    win:"Новичок теперь смотрит на тебя с уважением.", lose:"Новичок всё перепутал — и на допросе назвал твоё имя." },
+  { year:"19 ноября 1825", title:"Вести из Таганрога", page:"361",
+    story:"В Таганроге неожиданно умер Александр I. По армии ползут слухи: кому теперь присягать?",
+    ref:"Ни у Александра, ни у его брата Константина не было рождённых в законном браке сыновей. Решение о наследнике было оформлено тайным указом, известным лишь членам царской семьи и нескольким сановникам.",
+    type:"choice", q:"Почему возникло междуцарствие?",
+    opts:["Престол завещан Николаю, но тот присягнул Константину и ждал его официального отказа","Александр I завещал престол своему сыну, а гвардия была против","Константин отказался, а Николай не захотел царствовать","Сенат отказался признать тайный указ"],
+    ans:0, hint:"Вспомни, кому присягнул Николай Павлович.",
+    exp:"Александр завещал престол Николаю. Николай, присягнувший Константину, ждал его официального отказа — так возникло междуцарствие длиной более двух недель.",
+    win:"Ты понял: время пришло — и сохранил хладнокровие.", lose:"Ты растерялся и наговорил лишнего в штабе." },
+  { year:"13 декабря 1825", title:"Арест", page:"359, 364",
+    story:"Гонец привозит страшную весть о руководителе Южного общества. Южане остались без головы.",
+    ref:"Пестель тайно готовил свой полк к походу на Москву и Петербург. Но правительство уже знало о заговоре.",
+    type:"choice", q:"Что случилось с П. Пестелем?",
+    opts:["Он был арестован 13 декабря 1825 г., незадолго до восстания","Он погиб в бою с правительственными войсками","Он бежал в Испанию к Риего","Он вывел Вятский полк на Сенатскую площадь"],
+    ans:0, hint:"Южное общество было «обезглавлено» ещё до выступления.",
+    exp:"Пестель был арестован 13 декабря 1825 г. Поэтому выступление на юге возглавил подполковник С. Муравьёв-Апостол.",
+    win:"Ты успел сжечь бумаги общества.", lose:"Бумаги с твоим почерком попали к следователям." },
+  { year:"Декабрь 1825 — январь 1826", title:"Черниговский полк", page:"364",
+    story:"Ты идёшь с восставшим Черниговским полком. Неделю полк кружит по окрестностям, ожидая, что присоединятся другие части.",
+    ref:"В конце декабря 1825 г. начался мятеж на юге во 2-й армии. Его возглавил подполковник С. Муравьёв-Апостол, поднявший полк, которым командовал.",
+    type:"choice", q:"Чем закончилось восстание Черниговского полка?",
+    opts:["В начале января 1826 г. мятежники были разгромлены правительственными войсками","К полку присоединилась вся 2-я армия","Полк дошёл до Москвы и сдался","Николай I помиловал восставших и отпустил по домам"],
+    ans:0, hint:"Справка подсказывает: расчёты на единомышленников оказались тщетными.",
+    exp:"Расчёты на присоединение единомышленников не оправдались. В начале января 1826 г. мятежники были разгромлены правительственными войсками.",
+    win:"Тебе удалось уйти до разгрома полка.", lose:"Тебя взяли в плен вместе с ранеными." },
+  { year:"1826", title:"Приговор", page:"364",
+    story:"Суд вынес решение. В крепости шепчут имена тех, кого приговорили к смерти.",
+    ref:"По делу декабристов был осуждён 121 человек. Остальные получили различные наказания: от каторги в Сибири до разжалования в рядовые и отправки на Кавказ.",
+    type:"multi", q:"Выбери ВСЕХ декабристов, которые были повешены.",
+    opts:["П. Пестель","С. Муравьёв-Апостол","К. Рылеев","П. Каховский","М. Бестужев-Рюмин","С. Трубецкой","Н. Муравьёв"],
+    ans:[0,1,2,3,4], hint:"Казнённых было пятеро. Н. Муравьёву смертную казнь заменили каторгой.",
+    exp:"Повешены пятеро: П. Пестель, С. Муравьёв-Апостол, К. Рылеев, П. Каховский и М. Бестужев-Рюмин.",
+    win:"Ты помнишь их имена — и не забудешь никогда.", lose:"Ты молчал на допросах, но следователи решили иначе." }
+  ],
+  endings:[
+    {min:10,title:"Уцелевший южанин",text:"Ты сжёг бумаги и ушёл до разгрома полка. Следствие так и не доказало твоего участия. Ты дожил до старости и рассказывал внукам о Пестеле и Муравьёве-Апостоле."},
+    {min:9,title:"Рядовой Кавказского корпуса",text:"Суд отнёсся к тебе мягко: тебя разжаловали в рядовые и отправили в действующую армию на Кавказ."},
+    {min:0,title:"Под вечным надзором",text:"Тебя отпустили, но жизнь твоя прошла под надзором полиции, без права на службу и без доверия властей."}
+  ]
+},
+{
+  id:"poet", who:"Литератор-северянин", name:"Александр, поэт из круга Рылеева", k:"#7a4fc4", kb:"#f3eefb",
+  intro:"Петербург. Ты молодой поэт: читаешь Карамзина, споришь в салонах и вступаешь в Северное общество. Впереди — 14 декабря.",
+  arrest:"При обыске нашли твои стихи, записки и списки товарищей. Следствию этого хватило.",
+  levels:[
+  { year:"1818", title:"Салонные споры", page:"356–357",
+    story:"В литературном салоне спорят о судьбе России. Одни хвалят самодержавие как несгибаемую силу, другие видят в нём систему, способную меняться.",
+    ref:"Консервативный лагерь никогда не был сплочённым. Свои взгляды Н. Карамзин изложил в «Записке о древней и новой России», поданной императору в 1811 г.",
+    type:"match", q:"Сопоставь деятеля и его взгляды.",
+    left:["А. Шишков","Н. Карамзин","П. Пестель","Н. Муравьёв"],
+    right:["Самодержавие должно оставаться несгибаемым и неизменным","Самодержавие — гибкая система, постепенно воспитывающая граждан","Республика и 10-летняя диктатура Временного правительства","Конституционная монархия и выборы сразу после переворота"],
+    hint:"Шишков и Карамзин — консерваторы, но смотрели на самодержавие по-разному. Пестель — южанин-республиканец.",
+    exp:"Шишков — несгибаемое самодержавие; Карамзин — гибкое, воспитывающее граждан; Пестель — республика и диктатура; Муравьёв — конституционная монархия без диктатуры.",
+    win:"Тебя заметили в салоне как умного спорщика.", lose:"Ты запутался в спорах и выглядел смешно." },
+  { year:"1819", title:"«История государства Российского»", page:"356",
+    story:"Весь Петербург читает новую книгу Карамзина. Ты тоже зачитываешься ею ночами.",
+    ref:"Карамзина Пушкин назвал Колумбом во многих отношениях. Его «История…» сразу стала общественным и культурным явлением и заставила россиян интересоваться прошлым своей страны.",
+    type:"multi", q:"Выбери ВСЁ, что учебник говорит о Н. Карамзине.",
+    opts:["Автор повести «Бедная Лиза»","Редактировал журнал «Вестник Европы»","По его предложению на Красной площади поставили памятник Минину и Пожарскому","Был членом Северного общества","Написал «Русскую правду»"],
+    ans:[0,1,2], hint:"Карамзин — консерватор, а не декабрист.",
+    exp:"Карамзин — автор «Бедной Лизы», редактор «Вестника Европы», автор «Истории государства Российского»; по его предложению установлен памятник Минину и Пожарскому.",
+    win:"Ты написал восторженный отзыв — его напечатали.", lose:"Ты раскритиковал книгу, не дочитав, — над тобой посмеялись." },
+  { year:"1821", title:"Северное общество", page:"360",
+    story:"Тебя принимают в Северное общество. Никита Муравьёв показывает тебе свою «Конституцию».",
+    ref:"По «Конституции» Муравьёва Россия становилась конституционной монархией. Крестьяне получали пашенный надел в две десятины, так что помещики могли сдавать им землю в аренду и использовать их труд.",
+    type:"choice", q:"На поддержку какой силы прежде всего надеялся Н. Муравьёв?",
+    opts:["Среднего и мелкого дворянства","Крепостного крестьянства","Донского казачества","Духовенства"],
+    ans:0, hint:"Он считал эту силу наиболее просвещённой, организованной и независимой.",
+    exp:"Муравьёв надеялся на поддержку не столько крестьянства, сколько среднего и мелкого дворянства. «Конституция» так и не стала программой Северного общества.",
+    win:"Тебе поручили переписывать «Конституцию» для товарищей.", lose:"Ты оставил черновик программы на столе в трактире." },
+  { year:"1824", title:"Общее и разное", page:"360",
+    story:"Северяне и южане спорят о программах. Ты пишешь статью о том, что их объединяет.",
+    ref:"Программы Пестеля и Муравьёва различались формой правления и подходом к переходному периоду, но во многом совпадали.",
+    type:"multi", q:"Что было ОБЩИМ для «Русской правды» и «Конституции»?",
+    opts:["Уничтожение крепостного права","Уничтожение самодержавия","Уничтожение сословного строя","Гражданские и политические права россиян","Республика","Диктатура Временного правительства"],
+    ans:[0,1,2,3], hint:"Республика и диктатура были только у Пестеля.",
+    exp:"Оба документа говорили об уничтожении крепостного права, самодержавия, сословного строя, провозглашали свободу и неприкосновенность собственности, давали гражданские и политические права.",
+    win:"Твою статью тайно читают и на юге.", lose:"Твою статью перехватили — в ней были фамилии." },
+  { year:"Ноябрь 1825", title:"Тайный указ", page:"361",
+    story:"Император умер. Ходят слухи, что существует бумага о наследнике, но о ней знают лишь немногие.",
+    ref:"Александр завещал престол брату Николаю. Это решение оформили тайным указом, известным лишь членам царской семьи и нескольким сановникам.",
+    type:"choice", q:"Где хранился тайный указ о передаче престола Николаю?",
+    opts:["В Успенском соборе Московского Кремля","В Петропавловской крепости","В здании Сената","В Зимнем дворце"],
+    ans:0, hint:"Это собор, где традиционно проходили коронации.",
+    exp:"Тайный указ хранился в Успенском соборе Московского Кремля.",
+    win:"Ты первым принёс товарищам точные сведения.", lose:"Ты пересказал слух неверно — и все ждали не того." },
+  { year:"13 декабря 1825", title:"Ночь перед восстанием", page:"361",
+    story:"На тайном собрании северян составляют план. Ты записываешь, кому что поручено.",
+    ref:"Дату восстания подсказало правительство: 14 декабря 1825 г. назначили днём переприсяги высших органов власти, гвардии и армии Николаю Павловичу.",
+    type:"multi", q:"Что, по плану Северного общества, должны были захватить три отряда?",
+    opts:["Семью Николая (Зимний дворец)","Сенат","Петропавловскую крепость","Московский Кремль","Адмиралтейство"],
+    ans:[0,1,2], hint:"Крепость была арсеналом гвардии и держала под прицелом весь центр столицы.",
+    exp:"Три отряда должны были захватить семью Николая, Сенат и Петропавловскую крепость. Но командиры отказались вести туда солдат, и действия превратились в импровизацию.",
+    win:"Ты получил поручение — и выполнил его.", lose:"Ты перепутал адреса — отряд ушёл не туда." },
+  { year:"14 декабря 1825", title:"Выбор дня", page:"361",
+    story:"Утро. Ты бежишь по морозным улицам к Сенатской площади и вспоминаешь, почему всё случилось именно сегодня.",
+    ref:"Междуцарствие продолжалось более двух недель. Оно дало декабристам возможность собрать силы для мятежа в столице и на юге.",
+    type:"choice", q:"Почему декабристы выступили именно 14 декабря 1825 г.?",
+    opts:["Правительство объявило этот день днём переприсяги Николаю","Это была годовщина Бородинского сражения","В этот день открывался польский сейм","В этот день начинались манёвры 2-й армии"],
+    ans:0, hint:"Справка предыдущего испытания уже отвечала на этот вопрос.",
+    exp:"Дату подсказало само правительство: 14 декабря назначили днём переприсяги Николаю Павловичу.",
+    win:"Ты успел предупредить товарищей вовремя.", lose:"Ты опоздал — площадь уже оцепляли." },
+  { year:"14 декабря 1825", title:"На площади", page:"362–363",
+    story:"Ты стоишь среди восставших. Мимо проскакал генерал, кто-то выстрелил, где-то спорят о диктаторе, которого нет.",
+    ref:"Восставшие простояли на площади несколько часов, а затем подоспевшая артиллерия несколькими залпами картечи заставила их бежать к Неве.",
+    type:"match", q:"Сопоставь участника событий и его действие 14 декабря.",
+    left:["П. Каховский","В. Кюхельбекер","С. Трубецкой","М. Милорадович"],
+    right:["Смертельно ранил генерал-губернатора Петербурга","Пытался выстрелить в великого князя Михаила Павловича","Назначенный диктатор, не явившийся на площадь","Пытался уговорить восставших вернуться в казармы"],
+    hint:"Кюхельбекер — писатель, Милорадович — генерал-губернатор Петербурга.",
+    exp:"Каховский смертельно ранил Милорадовича, который уговаривал восставших разойтись; Кюхельбекер неудачно пытался выстрелить в Михаила Павловича; Трубецкой на площадь не явился.",
+    win:"Ты укрылся в переулке и уцелел после залпов.", lose:"Тебя задержали у Невы с исписанными листками." },
+  { year:"1816–1826", title:"Записки о былом", page:"357–364",
+    story:"Ты решаешь записать историю движения, пока память свежа.",
+    ref:"Путь декабристов занял десять лет — от первых кружков до восстаний в Петербурге и на юге.",
+    type:"order", q:"Расставь события в хронологическом порядке.",
+    items:["Создание «Союза спасения»","Образование Северного общества","Смерть Александра I в Таганроге","Восстание на Сенатской площади","Разгром восстания Черниговского полка"],
+    hint:"Восстание на юге началось в конце декабря и было подавлено в начале января 1826 г.",
+    exp:"1816 — «Союз спасения»; 1821 — Северное общество; 19 ноября 1825 — смерть Александра I; 14 декабря 1825 — Сенатская площадь; январь 1826 — разгром Черниговского полка.",
+    win:"Твои записки спрятаны в надёжном месте.", lose:"Твои записки нашли при обыске." },
+  { year:"1826 и далее", title:"Декабристки", page:"360, 364",
+    story:"Жёны твоих друзей собираются в Сибирь. Ты провожаешь их в дальний путь.",
+    ref:"Поступок жён декабристов стал для последующих поколений символом силы и мужества русских женщин.",
+    type:"multi", q:"Выбери ВСЕ верные факты о декабристках.",
+    opts:["Так называли жён, невест и сестёр, добровольно последовавших за декабристами в Сибирь","Всего таких женщин было 12","Они теряли дворянство, свободу передвижения и переписки","Им разрешали взять с собой детей","Через жену Н. Муравьёва Пушкин передал послание «Во глубине сибирских руд…»"],
+    ans:[0,1,2,4], hint:"Детей им как раз пришлось оставить.",
+    exp:"Декабристок было 12; они теряли дворянство и свободы и расставались с детьми. С женой Н. Муравьёва Пушкин передал своё послание «Во глубине сибирских руд…».",
+    win:"Ты передал с ними письма и стихи друзьям.", lose:"Твоё письмо в Сибирь перехватили жандармы." }
+  ],
+  endings:[
+    {min:10,title:"Голос эпохи",text:"Ты уцелел после 14 декабря и стал писателем. Твои стихи о друзьях-декабристах тайно переписывали от руки, а записки о движении прочли уже следующие поколения."},
+    {min:9,title:"Ссылка на Кавказ",text:"Тебя разжаловали в рядовые и отправили в действующую армию на Кавказ. Там ты продолжал писать — о горах, войне и свободе."},
+    {min:0,title:"Под надзором",text:"Тебя не судили, но запретили печататься. Свои стихи ты читал только самым близким — шёпотом."}
+  ]
+}];
+
+const MAX_FAILS = 3;
+
+
+const TYPE_LABEL = {choice:"Один ответ", multi:"Несколько ответов", order:"Хронология", match:"Соответствие"};
+const PAIR_COLORS = ["#1f3c8f","#f0861f","#7a4fc4","#1f8a5b","#162c6b"];
+
+/* ===================== STORAGE ===================== */
+const KEY = "dekabristy-zhrebiy-v1";
+function loadBest(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; } }
+function saveBest(id,score){ try{ const b=loadBest(); if(b[id]==null||score>b[id]) b[id]=score; localStorage.setItem(KEY,JSON.stringify(b)); }catch(e){} }
+
+/* ===================== HELPERS ===================== */
+const $ = (s,r=document)=>r.querySelector(s);
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function show(id){ ["scr-start","scr-game","scr-end"].forEach(s=>$("#"+s).classList.toggle("hide",s!==id)); window.scrollTo({top:0,behavior:"instant"in window?"instant":"auto"}); }
+const heart = used=>`<svg class="heart${used?" used":""}" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.6 1.2 5.3 3.1 1.7-1.9 3.2-3.1 5.3-3.1 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z" fill="#f0861f"/></svg>`;
+function plural(n){ return n===1?"испытание":(n>=2&&n<=4?"испытания":"испытаний"); }
+
+/* ===================== START SCREEN ===================== */
+function renderFates(){
+  const best = loadBest();
+  $("#fates").innerHTML = FATES.map((f,i)=>`
+    <button class="fate" data-i="${i}" style="--k:${f.k};--kb:${f.kb}">
+      <div class="emb">${EMB[f.id](f.k)}</div>
+      <div><div class="who">${f.who}</div><div class="nm">${esc(f.name)}</div></div>
+      <div class="txt">${esc(f.intro)}</div>
+      <div class="meta"><span>${f.levels.length} испытаний</span>${best[f.id]!=null?`<span class="best">рекорд ${best[f.id]}/${f.levels.length}</span>`:`<span>не пройдено</span>`}</div>
+    </button>`).join("");
+  $("#fates").querySelectorAll(".fate").forEach(b=>b.onclick=()=>start(+b.dataset.i));
+}
+let drawing=false;
+$("#drawBtn").onclick = ()=>{
+  if(drawing) return; drawing=true;
+  const cards=[...document.querySelectorAll(".fate")];
+  const target=Math.floor(Math.random()*cards.length);
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const steps = reduce?1:12+target; let n=0;
+  const tick=()=>{
+    cards.forEach(c=>c.classList.remove("flick"));
+    const idx = reduce?target:n%cards.length;
+    cards[idx].classList.add("flick");
+    n++;
+    if(n<steps) setTimeout(tick,70+n*12);
+    else { cards[idx].classList.add("drawn"); setTimeout(()=>{ cards.forEach(c=>c.classList.remove("flick","drawn")); drawing=false; start(idx); }, reduce?100:700); }
+  };
+  tick();
+};
+
+/* ===================== GAME STATE ===================== */
+let G=null;
+function start(i){
+  G={f:FATES[i], lvl:0, res:[]};
+  const f=G.f;
+  $("#gWho").innerHTML=`<div class="emb" style="--kb:${f.kb}">${EMB[f.id](f.k)}</div><div><b style="--k:${f.k}">${f.who}</b><small>${esc(f.name)}</small></div>`;
+  $("#gWho b").style.color=f.k;
+  show("scr-game");
+  renderLevel();
+}
+$("#exitBtn").onclick=()=>{ renderFates(); show("scr-start"); };
+
+function renderProgress(){
+  const L=G.f.levels;
+  const fails=G.res.filter(r=>r===false).length;
+  $("#gScore").innerHTML=`<span class="pips">${L.map((_,i)=>`<span class="pip ${G.res[i]===true?"ok":G.res[i]===false?"no":""} ${i===G.lvl&&G.res[i]==null?"cur":""}"></span>`).join("")}</span><span class="fails ${fails>=MAX_FAILS-1?"warn":""}" title="Неуспехи">${Array.from({length:MAX_FAILS},(_,i)=>`<i class="${i<fails?"on":""}"></i>`).join("")}<b>${fails}/${MAX_FAILS}</b></span>`;
+  $("#gPath").innerHTML=L.map((l,i)=>{
+    const st=G.res[i]===true?"ok":G.res[i]===false?"no":i===G.lvl?"cur":"fut";
+    const mark=G.res[i]===true?"✓":G.res[i]===false?"✕":i+1;
+    return `<li class="${st}"><span class="dot">${mark}</span><span class="y">${l.year}</span><span class="t">${esc(l.title)}</span></li>`;
+  }).join("");
+  const cur=$("#gPath").children[G.lvl]; if(cur){ const P=$("#gPath"); if(P.scrollWidth>P.clientWidth) P.scrollLeft=cur.offsetLeft-P.clientWidth/2+cur.offsetWidth/2; else if(P.scrollHeight>P.clientHeight) P.scrollTop=cur.offsetTop-P.clientHeight/2; }
+}
+
+/* ===================== LEVEL ===================== */
+function renderLevel(){
+  const L=G.f.levels[G.lvl];
+  G.tries=2; G.done=false; G.sel=null;
+  renderProgress();
+  const card=$("#gCard");
+  card.innerHTML=`
+    <div class="card-h"><span class="eyebrow">${L.year} · испытание ${G.lvl+1} из ${G.f.levels.length}</span><h2>${esc(L.title)}</h2></div>
+    <div class="card-b">
+      <p class="story">${esc(L.story)}</p>
+      <div class="ref"><h4>Справка</h4><p>${esc(L.ref)}</p></div>
+      <div class="script"><i>✎</i>Можно решать с учебником · с. ${L.page}</div>
+      <div class="qhead"><span class="qtype">${TYPE_LABEL[L.type]}</span><span class="tries" id="tries"></span></div>
+      <p class="q">${esc(L.q)}</p>
+      <div id="qbody"></div>
+      <div class="actions"><button class="btn btn-n" id="check" disabled>Проверить</button><button class="btn btn-g hide" id="reset">Сбросить</button></div>
+      <div id="fb"></div>
+    </div>`;
+  renderTries();
+  ({choice:buildChoice,multi:buildChoice,order:buildOrder,match:buildMatch})[L.type](L);
+  $("#check").onclick=()=>check(L);
+  card.scrollIntoView({block:"start",behavior:"smooth"});
+  if(window.innerWidth>960) window.scrollTo({top:0});
+}
+function renderTries(){ $("#tries").innerHTML=`Попытки: ${heart(G.tries<2)}${heart(G.tries<1)}`; }
+function setReady(v){ $("#check").disabled=!v||G.done; }
+
+/* ---- choice / multi ---- */
+function buildChoice(L){
+  const multi=L.type==="multi";
+  G.order=shuffle(L.opts.map((_,i)=>i));
+  G.sel=new Set();
+  const box=$("#qbody");
+  box.innerHTML=`<div class="opts">${G.order.map(i=>`<button class="opt ${multi?"multi":""}" data-i="${i}" role="${multi?"checkbox":"radio"}" aria-checked="false"><span class="mk"></span><span>${esc(L.opts[i])}</span></button>`).join("")}</div>`;
+  box.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i;
+    if(multi){ G.sel.has(i)?G.sel.delete(i):G.sel.add(i); }
+    else { G.sel=new Set([i]); }
+    box.querySelectorAll(".opt").forEach(o=>{const on=G.sel.has(+o.dataset.i);o.classList.toggle("sel",on);o.setAttribute("aria-checked",on);});
+    setReady(G.sel.size>0);
+  });
+}
+/* ---- order ---- */
+function buildOrder(L){
+  G.seq=[]; G.pool=shuffle(L.items.map((_,i)=>i));
+  if(G.pool.every((v,i)=>v===i)) G.pool.reverse();
+  drawOrder(L);
+  $("#reset").classList.remove("hide");
+  $("#reset").onclick=()=>{ if(G.done)return; G.seq=[]; drawOrder(L); };
+}
+function drawOrder(L,marks){
+  const box=$("#qbody");
+  const n=L.items.length;
+  box.innerHTML=`<p class="hint-s">Нажимай на события по порядку — от самого раннего. Нажми на заполненную ячейку, чтобы вернуть событие.</p>
+    <div class="slots">${Array.from({length:n},(_,k)=>{const it=G.seq[k];const m=marks?marks[k]:"";return `<div class="slot ${it!=null?"fill":""} ${m}" data-k="${k}" ${it!=null&&!G.done?'tabindex="0" role="button"':""}><span class="n">${k+1}</span><span>${it!=null?esc(L.items[it]):""}</span></div>`;}).join("")}</div>
+    <div class="pool">${G.pool.filter(i=>!G.seq.includes(i)).map(i=>`<button class="chip" data-i="${i}">${esc(L.items[i])}</button>`).join("")}</div>`;
+  box.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{ if(G.done)return; G.seq.push(+c.dataset.i); drawOrder(L); });
+  box.querySelectorAll(".slot.fill").forEach(s=>{const f=()=>{ if(G.done)return; G.seq.splice(+s.dataset.k,1); drawOrder(L); }; s.onclick=f; s.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();f();}};});
+  setReady(G.seq.length===n);
+}
+/* ---- match ---- */
+function buildMatch(L){
+  G.ro=shuffle(L.right.map((_,i)=>i));
+  if(G.ro.every((v,i)=>v===i)) G.ro.push(G.ro.shift());
+  G.pairs={}; G.act=null;
+  drawMatch(L);
+  $("#reset").classList.remove("hide");
+  $("#reset").onclick=()=>{ if(G.done)return; G.pairs={}; G.act=null; drawMatch(L); };
+}
+function drawMatch(L,marks){
+  const box=$("#qbody");
+  const colorOf=l=>PAIR_COLORS[l%PAIR_COLORS.length];
+  const rightOwner=r=>{for(const l in G.pairs) if(G.pairs[l]===r) return +l; return null;};
+  box.innerHTML=`<p class="hint-s">Нажми на понятие слева, затем на его описание справа.</p>
+  <div class="match">
+    <div class="mcol"><h5>Понятие</h5>${L.left.map((t,l)=>{const p=G.pairs[l]!=null;const m=marks?(marks[l]?"right":"wrong"):"";return `<button class="mi lft ${G.act===l?"act":""} ${p?"paired":""} ${m}" data-l="${l}"><span class="b" style="${p||G.act===l?`background:${colorOf(l)};border:0`:""}">${l+1}</span>${esc(t)}</button>`;}).join("")}</div>
+    <div class="mcol"><h5>Описание</h5>${G.ro.map(r=>{const o=rightOwner(r);return `<button class="mi ${o!=null?"paired":""}" data-r="${r}"><span class="b" style="${o!=null?`background:${colorOf(o)};border:0`:""}">${o!=null?o+1:""}</span>${esc(L.right[r])}</button>`;}).join("")}</div>
+  </div>`;
+  box.querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>{ if(G.done)return; const l=+b.dataset.l; G.act=G.act===l?null:l; drawMatch(L); });
+  box.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{
+    if(G.done)return; const r=+b.dataset.r;
+    const o=rightOwner(r);
+    if(G.act==null){ if(o!=null){ delete G.pairs[o]; drawMatch(L);} return; }
+    if(o!=null) delete G.pairs[o];
+    G.pairs[G.act]=r;
+    const next=L.left.findIndex((_,i)=>G.pairs[i]==null);
+    G.act=next>=0?next:null;
+    drawMatch(L);
+  });
+  setReady(Object.keys(G.pairs).length===L.left.length);
+}
+
+/* ===================== CHECK ===================== */
+function isCorrect(L){
+  if(L.type==="choice") return G.sel.has(L.ans);
+  if(L.type==="multi") return G.sel.size===L.ans.length && L.ans.every(a=>G.sel.has(a));
+  if(L.type==="order") return G.seq.every((v,i)=>v===i);
+  if(L.type==="match") return L.left.every((_,l)=>G.pairs[l]===l);
+}
+function check(L){
+  if(G.done) return;
+  const ok=isCorrect(L);
+  const fb=$("#fb");
+  if(ok){ finish(L,true); return; }
+  G.tries--; renderTries();
+  if(G.tries>0){
+    const card=$("#gCard"); card.classList.remove("shake"); void card.offsetWidth; card.classList.add("shake");
+    fb.innerHTML=`<div class="fb hint"><div class="ic">?</div><h4>Не совсем. Осталась одна попытка</h4><p>${esc(L.hint)}</p><p class="cons">Загляни в учебник: с. ${L.page}.</p></div>`;
+    // reset selection
+    if(L.type==="choice"||L.type==="multi"){ G.sel=new Set(); $("#qbody").querySelectorAll(".opt").forEach(o=>{o.classList.remove("sel");o.setAttribute("aria-checked","false");}); setReady(false); }
+    if(L.type==="order"){ G.seq=[]; drawOrder(L); }
+    if(L.type==="match"){ G.pairs={}; G.act=null; drawMatch(L); }
+  } else finish(L,false);
+}
+function finish(L,ok){
+  G.done=true; G.res[G.lvl]=ok;
+  $("#check").classList.add("hide"); $("#reset").classList.add("hide");
+  // reveal
+  if(L.type==="choice"||L.type==="multi"){
+    const right=new Set(L.type==="choice"?[L.ans]:L.ans);
+    $("#qbody").querySelectorAll(".opt").forEach(o=>{const i=+o.dataset.i;o.classList.remove("sel");if(right.has(i))o.classList.add("right");else if(G.sel.has(i))o.classList.add("wrong");});
+    $("#qbody").classList.add("locked");
+  }
+  if(L.type==="order"){
+    const marks=G.seq.map((v,i)=>v===i?"right":"wrong");
+    if(!ok){ G.seq=L.items.map((_,i)=>i); drawOrder(L,G.seq.map(()=>"right")); }
+    else drawOrder(L,marks);
+  }
+  if(L.type==="match"){
+    if(!ok){ L.left.forEach((_,l)=>G.pairs[l]=l); }
+    drawMatch(L,L.left.map(()=>true));
+  }
+  const fails=G.res.filter(r=>r===false).length;
+  const arrested=fails>=MAX_FAILS;
+  const last=G.lvl===G.f.levels.length-1;
+  $("#fb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><div class="ic">${ok?"✓":"✕"}</div>
+    <h4>${ok?"Успех":"Неуспех"}</h4>
+    <p>${ok?"":"<b>Правильный ответ показан выше.</b> "}${esc(L.exp)}</p>
+    <p class="cons">→ ${esc(ok?L.win:L.lose)}</p>${!ok?`<p class="cons" style="color:var(--purple)">${arrested?"Это третий неуспех. За тобой пришли…":`Неуспехов: ${fails} из ${MAX_FAILS}.${fails===MAX_FAILS-1?" Ещё один — и арест.":""}`}</p>`:""}</div>
+    <div class="actions"><button class="btn ${arrested?"btn-n":"btn-o"}" id="next">${arrested?"Что дальше?":last?"Узнать свою судьбу":"Дальше"} →</button></div>`;
+  renderProgress();
+  $("#next").onclick=()=>{ if(arrested) end(true); else if(last) end(); else { G.lvl++; renderLevel(); } };
+  $("#next").focus({preventScroll:true});
+}
+
+/* ===================== END ===================== */
+const PEEK = `<svg viewBox="40 14 260 250"><defs>
+<linearGradient id="pkfur" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffab4a"/><stop offset=".6" stop-color="#f48d24"/><stop offset="1" stop-color="#e2761a"/></linearGradient>
+<radialGradient id="pkiris" cx="50%" cy="38%" r="65%"><stop offset="0" stop-color="#6f93f0"/><stop offset=".45" stop-color="#2a4db0"/><stop offset="1" stop-color="#121c45"/></radialGradient>
+<linearGradient id="pksuit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d52b8"/><stop offset="1" stop-color="#18306f"/></linearGradient>
+<radialGradient id="pkshine" cx="35%" cy="25%" r="50%"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+</defs><g>
+<!-- ears -->
+<path d="M80 118 C70 80 76 40 92 22 C116 34 140 56 152 78 Z" fill="url(#pkfur)" stroke="#1b2340" stroke-width="5" stroke-linejoin="round"/>
+<path d="M260 118 C270 80 264 40 248 22 C224 34 200 56 188 78 Z" fill="url(#pkfur)" stroke="#1b2340" stroke-width="5" stroke-linejoin="round"/>
+<path d="M92 98 C88 72 92 52 98 42 C114 52 126 64 134 78 Z" fill="#ffc9a6"/>
+<path d="M248 98 C252 72 248 52 242 42 C226 52 214 64 206 78 Z" fill="#ffc9a6"/>
+<path d="M98 80 l10 -6 M100 92 l12 -4 M242 80 l-10 -6 M240 92 l-12 -4" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".9"/>
+<!-- head -->
+<path d="M170 64 C234 64 270 98 274 140 L294 152 L274 163 L290 181 L264 189 C248 216 212 232 170 232 C128 232 92 216 76 189 L50 181 L66 163 L46 152 L66 140 C70 98 106 64 170 64 Z" fill="url(#pkfur)" stroke="#1b2340" stroke-width="5" stroke-linejoin="round"/>
+<path d="M170 64 C234 64 270 98 274 140 L294 152 L274 163 L290 181 L264 189 C248 216 212 232 170 232 C128 232 92 216 76 189 L50 181 L66 163 L46 152 L66 140 C70 98 106 64 170 64 Z" fill="url(#pkshine)"/>
+<!-- stripes -->
+<path d="M150 70 C153 84 152 94 146 104 M170 67 C171 82 171 94 170 106 M190 70 C187 84 188 94 194 104" stroke="#d96a10" stroke-width="7" stroke-linecap="round" fill="none"/>
+<path d="M68 150 C80 150 90 152 98 156 M72 170 C82 168 90 168 98 170 M272 150 C260 150 250 152 242 156 M268 170 C258 168 250 168 242 170" stroke="#d96a10" stroke-width="6" stroke-linecap="round" fill="none"/>
+<!-- muzzle -->
+<path d="M170 180 C150 166 122 174 122 196 C122 218 150 224 170 212 C190 224 218 218 218 196 C218 174 190 166 170 180 Z" fill="#fff4e6"/>
+<path d="M146 222 C156 230 184 230 194 222 C188 214 152 214 146 222 Z" fill="#fff4e6"/>
+<!-- blush -->
+<ellipse cx="92" cy="192" rx="17" ry="10" fill="#ff8f6b" opacity=".45"/>
+<ellipse cx="248" cy="192" rx="17" ry="10" fill="#ff8f6b" opacity=".45"/>
+<!-- eyes -->
+<circle cx="122" cy="144" r="35" fill="#fff" stroke="#1b2340" stroke-width="5"/>
+<circle cx="218" cy="144" r="35" fill="#fff" stroke="#1b2340" stroke-width="5"/>
+<circle cx="126" cy="149" r="27" fill="url(#pkiris)"/>
+<circle cx="214" cy="149" r="27" fill="url(#pkiris)"/>
+<circle cx="126" cy="150" r="13" fill="#0e1533"/>
+<circle cx="214" cy="150" r="13" fill="#0e1533"/>
+<ellipse cx="113" cy="134" rx="10" ry="12" fill="#fff"/>
+<ellipse cx="201" cy="134" rx="10" ry="12" fill="#fff"/>
+<circle cx="138" cy="163" r="4.5" fill="#fff"/>
+<circle cx="226" cy="163" r="4.5" fill="#fff"/>
+<path d="M126 170 C134 168 142 162 146 156 M214 170 C206 168 198 162 194 156" stroke="#9fb4ec" stroke-width="3" stroke-linecap="round" fill="none" opacity=".7"/>
+<path d="M86 132 C92 108 128 98 152 118 M254 132 C248 108 212 98 188 118" stroke="#1b2340" stroke-width="6" stroke-linecap="round" fill="none"/>
+<path d="M86 128 l-9 -6 M90 120 l-7 -9 M254 128 l9 -6 M250 120 l7 -9" stroke="#1b2340" stroke-width="4" stroke-linecap="round"/>
+<path d="M104 96 C114 90 126 90 134 94 M206 94 C214 90 226 90 236 96" stroke="#b9560c" stroke-width="5" stroke-linecap="round" fill="none"/>
+<!-- nose & mouth -->
+<path d="M170 196 C162 188 154 184 156 178 C158 172 166 172 170 178 C174 172 182 172 184 178 C186 184 178 188 170 196 Z" fill="#ff8fa3" stroke="#1b2340" stroke-width="3.5" stroke-linejoin="round"/>
+<ellipse cx="164" cy="179" rx="3" ry="2" fill="#fff" opacity=".8"/>
+<path d="M170 196 L170 202 M170 202 C165 212 152 212 148 204 M170 202 C175 212 188 212 192 204" stroke="#1b2340" stroke-width="4" fill="none" stroke-linecap="round"/>
+<!-- whiskers -->
+<path d="M120 196 L74 188 M120 204 L76 210 M220 196 L266 188 M220 204 L264 210" stroke="#1b2340" stroke-width="2.6" stroke-linecap="round" opacity=".55"/>
+</g>
+<path d="M96 262 C92 236 108 226 126 228 C144 230 150 250 146 262 Z" fill="url(#pkfur)" stroke="#1b2340" stroke-width="5"/>
+<path d="M244 262 C248 236 232 226 214 228 C196 230 190 250 194 262 Z" fill="url(#pkfur)" stroke="#1b2340" stroke-width="5"/>
+<path d="M112 240 v12 M126 236 v14 M228 240 v12 M214 236 v14" stroke="#1b2340" stroke-width="3.5" stroke-linecap="round"/></svg>`;
+function end(arrested){
+  const f=G.f, total=f.levels.length, score=G.res.filter(Boolean).length, played=G.res.length;
+  if(!arrested) saveBest(f.id,score);
+  const sib = arrested && score>=3;
+  const e=arrested?(sib
+    ?{title:"Сослан в Сибирь",text:f.arrest+" Но до ареста ты успел пройти "+score+" "+plural(score)+", и суд это учёл: тебя лишили дворянства и сослали на каторгу в Сибирь. Здесь твоя история заканчивается."}
+    :{title:"Повешен тайно",text:f.arrest+(score?" До ареста ты успел пройти лишь "+score+" "+plural(score)+", и суд":" До ареста ты не прошёл ни одного испытания, и суд")+" записал тебя в главные зачинщики. Приговор привели в исполнение тайно, на рассвете. Здесь твоя история заканчивается."})
+    :f.endings.find(x=>score>=x.min);
+  const sealColor=arrested?(sib?"#1f3c8f":"#7a4fc4"):score>=total?"#f0861f":"#1f3c8f";
+  const sealTop=arrested?(sib?"СИБИРЬ":"КАЗНЬ"):`${score}/${total}`, sealBot=arrested?(sib?"КАТОРГА":"ТАЙНО"):"УСПЕХОВ";
+  $("#endWrap").innerHTML=`
+    <div class="diploma ${arrested?"arrest":""}">
+      ${arrested?"":`<div class="peek" aria-hidden="true">${PEEK}</div>`}
+      <svg class="seal" viewBox="0 0 120 120" aria-hidden="true"><g fill="${sealColor}">${Array.from({length:16},(_,i)=>`<circle cx="${60+48*Math.cos(i*Math.PI/8)}" cy="${60+48*Math.sin(i*Math.PI/8)}" r="12"/>`).join("")}<circle cx="60" cy="60" r="48"/></g><circle cx="60" cy="60" r="36" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="4 5"/><text x="60" y="${arrested?62:58}" text-anchor="middle" font-family="Unbounded,Inter,sans-serif" font-weight="800" font-size="${arrested?16:24}" fill="#fff">${sealTop}</text><text x="60" y="${arrested?80:78}" text-anchor="middle" font-family="Golos Text,Inter,sans-serif" font-weight="700" font-size="${arrested?9:11}" fill="#fff">${sealBot}</text></svg>
+      <span class="eyebrow">${arrested?"Приговор суда":"Грамота судьбы"} · ${f.who}</span>
+      <h2>${e.title}</h2>
+      <div class="sub">${esc(f.name)}</div>
+      ${arrested?`<div class="big-score">${played}<small>из ${total}</small></div><div class="sub">испытаний пройдено<br>из них успехов: ${score}</div>`:`<div class="big-score">${score}<small>из ${total}</small></div><div class="sub">успешно пройденных испытаний</div>`}
+      <p class="end-t">${esc(e.text)}</p>
+      <ul class="recap">${f.levels.slice(0,played).map((l,i)=>`<li><span class="r ${G.res[i]?"ok":"no"}">${G.res[i]?"УСПЕХ":"НЕУСПЕХ"}</span><span>${l.year} · ${esc(l.title)}<small>${esc(G.res[i]?l.win:l.lose)}</small></span></li>`).join("")}</ul>
+      <div class="end-actions">
+        <button class="btn btn-o" id="again">${arrested?"Попробовать ещё раз":"Прожить эту судьбу заново"}</button>
+        <button class="btn btn-n" id="other">Выбрать другую судьбу</button>
+        <a class="btn btn-g sub-link" href="https://t.me/historyandcats" target="_blank" rel="noopener">Подписаться на «Историю и котиков»</a>
+      </div>
+    </div>`;
+  show("scr-end");
+  applySub();
+  $("#again").onclick=()=>start(FATES.indexOf(f));
+  $("#other").onclick=()=>{ renderFates(); show("scr-start"); };
+}
+
+renderFates();
+applySub();
+})();
+</script>
+
+</body>
+</html>
